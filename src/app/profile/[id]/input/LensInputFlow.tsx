@@ -11,6 +11,12 @@ import GematriaInput from '@/components/lenses/GematriaInput'
 import NatalChartInput from '@/components/lenses/NatalChartInput'
 import MiddosInput from '@/components/lenses/MiddosInput'
 import ColorPsychologyInput from '@/components/lenses/ColorPsychologyInput'
+import PalmInput from '@/components/lenses/PalmInput'
+import HandwritingInput from '@/components/lenses/HandwritingInput'
+import FaceReadingInput from '@/components/lenses/FaceReadingInput'
+import BiorhythmInput from '@/components/lenses/BiorhythmInput'
+import ChineseZodiacInput from '@/components/lenses/ChineseZodiacInput'
+import EnneagramInput from '@/components/lenses/EnneagramInput'
 
 interface LensInput {
   id: string
@@ -89,7 +95,7 @@ export default function LensInputFlow({ profile, lensInputs }: LensInputFlowProp
             <h1 className="font-serif text-3xl text-white">Complete Your Lenses</h1>
           </div>
 
-          {/* Lens progress bar */}
+          {/* Lens progress tabs */}
           <div className="flex gap-2 mb-8 flex-wrap">
             {lensInputs.map((li, i) => {
               const card = LENS_CARDS.find((c) => c.type === li.lens_type)
@@ -125,37 +131,40 @@ export default function LensInputFlow({ profile, lensInputs }: LensInputFlowProp
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
+                {/* Phase 1 */}
                 {currentCard.type === 'gematria' && (
-                  <GematriaInput
-                    lensInputId={currentLensInput.id}
-                    profileId={profile.id}
-                    initialData={currentLensInput.input_data}
-                    onComplete={() => handleLensComplete('gematria')}
-                  />
+                  <GematriaInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('gematria')} />
                 )}
                 {currentCard.type === 'natal_chart' && (
-                  <NatalChartInput
-                    lensInputId={currentLensInput.id}
-                    profileId={profile.id}
-                    initialData={currentLensInput.input_data}
-                    onComplete={() => handleLensComplete('natal_chart')}
-                  />
+                  <NatalChartInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('natal_chart')} />
                 )}
                 {currentCard.type === 'middos_assessment' && (
-                  <MiddosInput
-                    lensInputId={currentLensInput.id}
-                    profileId={profile.id}
-                    initialData={currentLensInput.input_data}
-                    onComplete={() => handleLensComplete('middos_assessment')}
-                  />
+                  <MiddosInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('middos_assessment')} />
                 )}
                 {currentCard.type === 'color_psychology' && (
-                  <ColorPsychologyInput
-                    lensInputId={currentLensInput.id}
-                    profileId={profile.id}
-                    initialData={currentLensInput.input_data}
-                    onComplete={() => handleLensComplete('color_psychology')}
-                  />
+                  <ColorPsychologyInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('color_psychology')} />
+                )}
+
+                {/* Phase 2 — Image lenses */}
+                {currentCard.type === 'palm' && (
+                  <PalmInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('palm')} />
+                )}
+                {currentCard.type === 'handwriting' && (
+                  <HandwritingInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('handwriting')} />
+                )}
+                {currentCard.type === 'face_reading' && (
+                  <FaceReadingInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('face_reading')} />
+                )}
+
+                {/* Phase 3 — Remaining lenses */}
+                {currentCard.type === 'biorhythm' && (
+                  <BiorhythmInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('biorhythm')} />
+                )}
+                {currentCard.type === 'chinese_zodiac' && (
+                  <ChineseZodiacInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('chinese_zodiac')} />
+                )}
+                {currentCard.type === 'enneagram' && (
+                  <EnneagramInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('enneagram')} />
                 )}
               </motion.div>
             )}

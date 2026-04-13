@@ -1,111 +1,195 @@
-'use client'
-
-import { motion } from 'framer-motion'
-import Link from 'next/link'
 import Starfield from '@/components/stars/Starfield'
+import AppNav from '@/components/layout/AppNav'
 import { LENS_CARDS } from '@/types'
 
-const TIER_DESCRIPTIONS = {
-  1: { label: 'Scholarly Foundation', color: 'text-celestial-gold border-celestial-gold/30' },
-  2: { label: 'Established Practice', color: 'text-blue-300 border-blue-400/30' },
-  3: { label: 'Cultural Tradition', color: 'text-purple-300 border-purple-400/30' },
-}
+const METHODOLOGY = [
+  {
+    tier: 'Scholarly Foundation',
+    colorClass: 'border-celestial-gold/40',
+    dotClass: 'bg-celestial-gold',
+    textClass: 'text-celestial-gold',
+    lenses: ['gematria', 'natal_chart', 'enneagram'],
+    description: 'Systems with centuries of documented scholarly tradition and/or peer-reviewed modern research.',
+    sources: [
+      "Ba'al HaTurim (Rabbi Yaakov ben Asher) — classical gematria associations",
+      'Arizal (Rabbi Yitzchak Luria) — Kabbalistic milui traditions and letter meanings',
+      'Claudius Ptolemy (Tetrabiblos) — foundational Western astrology',
+      'Liz Greene & Stephen Arroyo — psychological astrology frameworks',
+      'Don Richard Riso & Russ Hudson — The Wisdom of the Enneagram (gold standard text)',
+    ],
+  },
+  {
+    tier: 'Established Practice',
+    colorClass: 'border-blue-400/30',
+    dotClass: 'bg-blue-300',
+    textClass: 'text-blue-300',
+    lenses: ['middos_assessment', 'color_psychology', 'handwriting'],
+    description: 'Systems with published practitioners, documented methodologies, and some academic study.',
+    sources: [
+      'Ramchal (Mesillas Yesharim) & Rabbi Shlomo Wolbe (Alei Shur) — mussar tradition',
+      'Dr. Max Lüscher (The Lüscher Color Test) — clinically tested color psychology since 1947',
+      'Angela Wright (Color Affects system) — used in corporate design worldwide',
+      'Andrea McNichol & Bart Baggett — graphology trait-stroke method',
+    ],
+  },
+  {
+    tier: 'Cultural Tradition',
+    colorClass: 'border-purple-400/30',
+    dotClass: 'bg-purple-300',
+    textClass: 'text-purple-300',
+    lenses: ['palm', 'face_reading', 'biorhythm', 'chinese_zodiac'],
+    description: 'Longstanding cultural traditions valued for their rich frameworks and metaphorical insight.',
+    sources: [
+      "Cheiro / Count Louis Hamon (Cheiro's Palmistry, 1897) — chirology foundation",
+      'Jean Haner (The Wisdom of Your Face) — Chinese physiognomy for modern audiences',
+      'Wilhelm Fliess & Hermann Swoboda — biorhythm mathematical theory',
+      'Theodora Lau (The Handbook of Chinese Horoscopes) — Chinese zodiac personality frameworks',
+    ],
+  },
+]
 
 export default function AboutPage() {
+  const lensCards = LENS_CARDS
+
   return (
     <div className="relative min-h-screen cosmic-bg">
       <Starfield />
       <div className="relative z-10">
-        <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
-          <Link href="/" className="font-serif text-xl gold-text">Cosmic Mirror</Link>
-          <Link href="/auth/signup" className="btn-gold text-sm px-5 py-2 rounded-lg">Begin Your Journey</Link>
-        </nav>
+        <AppNav />
+        <main className="max-w-4xl mx-auto px-6 py-12">
 
-        <main className="max-w-4xl mx-auto px-6 py-10 pb-20">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
-            <h1 className="font-serif text-5xl text-white mb-4">
-              Our <em className="gold-text not-italic">Methodology</em>
-            </h1>
-            <p className="text-soft-silver/60 max-w-2xl mx-auto leading-relaxed">
+          {/* Hero */}
+          <div className="text-center mb-14">
+            <div className="text-5xl mb-4">✦</div>
+            <h1 className="font-serif text-5xl text-white mb-4">How Cosmic Mirror Works</h1>
+            <p className="text-soft-silver/60 max-w-2xl mx-auto leading-relaxed text-lg">
               Cosmic Mirror draws on the Jewish principle of{' '}
-              <em className="text-celestial-gold">Da es atzmecha</em> — Know Yourself.
-              Every lens is framed as personality insight and self-discovery —
-              never divination, fortune-telling, or scientific diagnosis.
-            </p>
-          </motion.div>
-
-          <div className="glass-card p-8 mb-10">
-            <h2 className="font-serif text-2xl text-white mb-4">Our Philosophy</h2>
-            <p className="text-soft-silver/70 leading-relaxed mb-4">
-              These systems are tools for self-reflection. They offer frameworks for understanding
-              personality patterns — not scientific diagnoses or predictions. We encourage you to
-              take what resonates, reflect on what surprises you, and use these insights as starting
-              points for genuine self-knowledge.
-            </p>
-            <p className="text-soft-silver/70 leading-relaxed">
-              We categorize each lens into one of three tiers based on its scholarly and evidential
-              foundation. This transparency helps you calibrate how to weigh each system&apos;s insights.
+              <span className="text-celestial-gold font-serif">דע את עצמך</span>{' '}
+              — &ldquo;Know Yourself.&rdquo; Every lens is a different angle of light illuminating who you are.
             </p>
           </div>
 
-          {/* Tier legend */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-            {([1, 2, 3] as const).map((tier) => (
-              <div key={tier} className="glass-card p-5">
-                <span className={`inline-block text-xs px-2 py-1 rounded-full border mb-3 ${TIER_DESCRIPTIONS[tier].color}`}>
-                  {TIER_DESCRIPTIONS[tier].label}
-                </span>
-                <p className="text-soft-silver/60 text-sm">
-                  {tier === 1 && 'Centuries of documented scholarly tradition and/or peer-reviewed modern research.'}
-                  {tier === 2 && 'Published practitioners, documented methodologies, and some academic study — results are meaningful but debated in mainstream science.'}
-                  {tier === 3 && 'Longstanding cultural traditions valued for their frameworks and metaphorical insight — limited modern scientific validation.'}
-                </p>
+          {/* Philosophy */}
+          <div className="glass-card p-8 mb-8 border-celestial-gold/20">
+            <h2 className="font-serif text-2xl text-white mb-4">Our Philosophy</h2>
+            <p className="text-soft-silver/70 leading-relaxed mb-4">
+              These systems are tools for self-reflection. They offer frameworks for understanding personality
+              patterns — not scientific diagnoses or predictions. We encourage you to take what resonates,
+              reflect on what surprises you, and use these insights as starting points for genuine self-knowledge.
+            </p>
+            <p className="text-soft-silver/70 leading-relaxed">
+              We do not predict the future. We do not make medical claims. We do not treat personality as destiny.
+              Every insight is framed as a tendency, a pattern, a possibility — never a fixed truth about who you must be.
+            </p>
+          </div>
+
+          {/* Convergence engine */}
+          <div className="glass-card p-8 mb-10">
+            <h2 className="font-serif text-2xl text-white mb-4">The Convergence Engine</h2>
+            <p className="text-soft-silver/70 leading-relaxed mb-5">
+              The real power of Cosmic Mirror lies in convergence. When multiple lenses — drawn from completely
+              different traditions — agree on the same personality trait, that agreement carries weight independent
+              of any single system&apos;s credibility.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { label: 'Data-Driven', desc: 'Birth chart, gematria, biorhythm — precisely calculated factual inputs', icon: '◈' },
+                { label: 'Image Analysis', desc: 'Palm, handwriting, face — interpretive insights via Claude Vision AI', icon: '◉' },
+                { label: 'Self-Report', desc: 'Middos, Enneagram, color — your conscious self-perception', icon: '∿' },
+              ].map((cat) => (
+                <div key={cat.label} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <div className="text-xl mb-2 text-celestial-gold">{cat.icon}</div>
+                  <h3 className="text-white font-medium mb-1 text-sm">{cat.label}</h3>
+                  <p className="text-soft-silver/50 text-xs leading-relaxed">{cat.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Methodology tiers */}
+          <h2 className="font-serif text-3xl text-white mb-6">Our Methodology Tiers</h2>
+          <div className="space-y-5 mb-12">
+            {METHODOLOGY.map((tier) => {
+              const tierLenses = lensCards.filter((l) => tier.lenses.includes(l.type))
+              return (
+                <div key={tier.tier} className={`glass-card p-6 border ${tier.colorClass}`}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`w-3 h-3 rounded-full ${tier.dotClass}`} />
+                    <h3 className={`font-serif text-xl ${tier.textClass}`}>{tier.tier}</h3>
+                  </div>
+                  <p className="text-soft-silver/60 text-sm mb-4">{tier.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {tierLenses.map((l) => (
+                      <span key={l.type} className="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-soft-silver/70">
+                        {l.icon} {l.name}
+                      </span>
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-soft-silver/40 text-xs mb-2 uppercase tracking-wider">Primary Sources</p>
+                    <ul className="space-y-1">
+                      {tier.sources.map((s) => (
+                        <li key={s} className="text-soft-silver/50 text-xs flex items-start gap-2">
+                          <span className="text-celestial-gold/60 mt-0.5 flex-shrink-0">·</span>{s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* All 10 lenses */}
+          <h2 className="font-serif text-3xl text-white mb-6">The 10 Lenses</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+            {lensCards.map((lens) => (
+              <div key={lens.type} className="glass-card p-5">
+                <div className="flex items-start gap-4">
+                  <span className="text-2xl flex-shrink-0 mt-0.5">{lens.icon}</span>
+                  <div>
+                    <h3 className="font-serif text-white mb-0.5">{lens.name}</h3>
+                    {lens.hebrewName && <p className="text-celestial-gold/60 text-sm mb-1">{lens.hebrewName}</p>}
+                    <p className="text-soft-silver/50 text-sm leading-relaxed mb-2">{lens.description}</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                        lens.tier === 1 ? 'border-celestial-gold/30 text-celestial-gold/70' :
+                        lens.tier === 2 ? 'border-blue-400/30 text-blue-300/70' :
+                        'border-purple-400/30 text-purple-300/70'
+                      }`}>
+                        {lens.tierLabel}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full border border-white/10 text-soft-silver/40 capitalize">
+                        {lens.inputType}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Lens methodology cards */}
-          <h2 className="font-serif text-3xl text-white mb-6">The Ten Lenses</h2>
-          <div className="flex flex-col gap-5">
-            {LENS_CARDS.map((lens, i) => (
-              <motion.div
-                key={lens.type}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
-                className="glass-card p-6"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl flex-shrink-0">{lens.icon}</span>
+          {/* Ethics */}
+          <div className="glass-card p-8 border-celestial-gold/20">
+            <h2 className="font-serif text-2xl text-white mb-6 text-center">Our Ethical Commitments</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {[
+                { icon: '◈', label: 'No Future Prediction', desc: 'We never use language like "you will" — only "you tend to" and "your profile suggests"' },
+                { icon: '◉', label: 'No Medical Claims', desc: 'Personality analysis cannot diagnose or treat any condition, and we never suggest it can' },
+                { icon: '∿', label: 'No Determinism', desc: 'These are tendencies, not destiny. You have the wiring for something — not you are permanently defined by it' },
+                { icon: '✦', label: 'Privacy First', desc: 'Face images are deleted after analysis by default. Reports belong to you. We never sell your data' },
+              ].map((c) => (
+                <div key={c.label} className="flex items-start gap-3">
+                  <span className="text-celestial-gold mt-0.5 flex-shrink-0 text-lg">{c.icon}</span>
                   <div>
-                    <div className="flex items-center gap-3 flex-wrap mb-2">
-                      <h3 className="font-serif text-xl text-white">{lens.name}</h3>
-                      {lens.hebrewName && (
-                        <span className="text-sm text-celestial-gold/60">{lens.hebrewName}</span>
-                      )}
-                      <span className={`text-xs px-2 py-0.5 rounded-full border ${TIER_DESCRIPTIONS[lens.tier].color}`}>
-                        {lens.tierLabel}
-                      </span>
-                      {lens.phase > 1 && (
-                        <span className="text-xs text-soft-silver/30 border border-white/10 px-2 py-0.5 rounded-full">
-                          Phase {lens.phase}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-soft-silver/65 text-sm leading-relaxed">{lens.description}</p>
+                    <p className="text-white text-sm font-medium mb-0.5">{c.label}</p>
+                    <p className="text-soft-silver/50 text-xs leading-relaxed">{c.desc}</p>
                   </div>
                 </div>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <div className="glass-card p-8 mt-10 text-center">
-            <p className="text-soft-silver/40 text-xs leading-relaxed max-w-xl mx-auto">
-              This profile is a tool for self-reflection and should complement — not replace —
-              your own judgment, the guidance of trusted mentors, and professional advice where applicable.
-            </p>
-          </div>
         </main>
       </div>
     </div>

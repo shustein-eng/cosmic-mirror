@@ -1,106 +1,181 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Starfield from '@/components/stars/Starfield'
 import AppNav from '@/components/layout/AppNav'
 
-const FREE_FEATURES = [
-  '1 profile',
-  'Up to 4 lenses',
-  'Full Cosmic Profile report',
-  'Gematria, Natal Chart, Middos & Color Psychology lenses',
-]
-
-const PREMIUM_FEATURES = [
-  'Unlimited profiles',
-  'All 10 lenses (Phase 2+)',
-  'All 7 report types',
-  'Profile comparison (coming in Phase 5)',
-  'PDF export',
-  'Shareable profile cards',
-  'Priority analysis processing',
-  'Re-analysis on demand',
-]
-
-const LIFETIME_FEATURES = [
-  'Everything in Premium, forever',
-  'Early access to new lenses',
-  'One-time payment — no subscription',
+const PLANS = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
+    description: 'Explore who you are',
+    features: [
+      'Up to 4 lenses per profile',
+      'Full Cosmic Profile report',
+      'Gematria, Natal Chart, Middos & Color Psychology',
+      'Save and revisit your profile anytime',
+    ],
+    cta: 'Get Started Free',
+    highlighted: false,
+  },
+  {
+    id: 'premium_monthly',
+    name: 'Premium',
+    price: '$9',
+    period: '/month',
+    description: 'Unlock the full cosmos',
+    features: [
+      'All 10 lenses — including image lenses',
+      'All 7 specialized reports',
+      'Career, Relationships, Growth, Creative, Wellness & Leadership reports',
+      'Profile comparison (invite anyone)',
+      'Shareable profile cards',
+      'PDF export of all reports',
+      'Biorhythm calendar export',
+    ],
+    cta: 'Start Premium',
+    highlighted: true,
+  },
+  {
+    id: 'lifetime',
+    name: 'Lifetime',
+    price: '$149',
+    period: 'one-time',
+    description: 'Yours forever',
+    features: [
+      'Everything in Premium',
+      'Lifetime access — pay once',
+      'All future features included',
+      'Priority Claude processing',
+    ],
+    cta: 'Get Lifetime Access',
+    highlighted: false,
+  },
 ]
 
 export default function PricingPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleCheckout = async (plan: (typeof PLANS)[number]) => {
+    if (plan.id === 'free') { router.push('/auth/signup'); return }
+
+    setLoading(plan.id)
+    setError(null)
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: plan.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        if (res.status === 503) {
+          setError('Stripe payments are not yet configured. Check back soon!')
+        } else if (res.status === 401) {
+          router.push('/auth/login?redirectTo=/pricing')
+        } else {
+          throw new Error(data.error || 'Checkout failed')
+        }
+        return
+      }
+      if (data.url) window.location.href = data.url
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
+    } finally {
+      setLoading(null)
+    }
+  }
+
   return (
     <div className="relative min-h-screen cosmic-bg">
       <Starfield />
       <div className="relative z-10">
         <AppNav />
+
         <main className="max-w-5xl mx-auto px-6 py-16">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
-            <h1 className="font-serif text-5xl text-white mb-4">
-              Choose Your <em className="gold-text not-italic">Path</em>
-            </h1>
-            <p className="text-soft-silver/60 max-w-xl mx-auto">
-              Begin for free. Unlock the full depth of your Cosmic Mirror with Premium.
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-14"
+          >
+            <h1 className="font-serif text-5xl text-white mb-4">Choose Your Depth</h1>
+            <p className="text-soft-silver/60 text-lg max-w-xl mx-auto">
+              Start free and discover yourself. Upgrade when you&apos;re ready to go deeper.
             </p>
           </motion.div>
 
+          {error && (
+            <div className="max-w-md mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center text-sm">
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Free */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-7 flex flex-col">
-              <p className="text-soft-silver/50 text-xs uppercase tracking-wider mb-2">Free</p>
-              <div className="font-serif text-5xl text-white mb-1">$0</div>
-              <p className="text-soft-silver/50 text-sm mb-6">Forever free</p>
-              <ul className="flex flex-col gap-2 mb-8 flex-1">
-                {FREE_FEATURES.map((f) => (
-                  <li key={f} className="flex gap-2 text-sm text-soft-silver/70">
-                    <span className="text-celestial-gold/60">·</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/auth/signup" className="btn-outline-gold text-center py-3 rounded-lg">
-                Get Started Free
-              </Link>
-            </motion.div>
+            {PLANS.map((plan, i) => (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className={`relative glass-card p-8 flex flex-col ${plan.highlighted ? 'border-celestial-gold/50 bg-celestial-gold/5' : ''}`}
+              >
+                {plan.highlighted && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="bg-celestial-gold text-midnight text-xs font-bold px-4 py-1 rounded-full">
+                      MOST POPULAR
+                    </span>
+                  </div>
+                )}
 
-            {/* Premium */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-7 flex flex-col border-celestial-gold/40 relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-celestial-gold text-midnight text-xs font-bold px-3 py-1 rounded-bl-lg">
-                MOST POPULAR
-              </div>
-              <p className="text-celestial-gold/80 text-xs uppercase tracking-wider mb-2">Premium</p>
-              <div className="font-serif text-5xl gold-text mb-1">$9.99</div>
-              <p className="text-soft-silver/50 text-sm mb-1">/month</p>
-              <p className="text-soft-silver/40 text-xs mb-6">or $79.99/year (save 33%)</p>
-              <ul className="flex flex-col gap-2 mb-8 flex-1">
-                {PREMIUM_FEATURES.map((f) => (
-                  <li key={f} className="flex gap-2 text-sm text-soft-silver/70">
-                    <span className="text-celestial-gold">·</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <button className="btn-gold py-3 rounded-lg opacity-70 cursor-not-allowed" disabled>
-                Coming Soon
-              </button>
-            </motion.div>
+                <div className="mb-6">
+                  <h2 className="font-serif text-2xl text-white mb-1">{plan.name}</h2>
+                  <p className="text-soft-silver/50 text-sm mb-4">{plan.description}</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`font-serif text-4xl ${plan.highlighted ? 'text-celestial-gold' : 'text-white'}`}>
+                      {plan.price}
+                    </span>
+                    <span className="text-soft-silver/40 text-sm">{plan.period}</span>
+                  </div>
+                </div>
 
-            {/* Lifetime */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-7 flex flex-col">
-              <p className="text-soft-silver/50 text-xs uppercase tracking-wider mb-2">Lifetime</p>
-              <div className="font-serif text-5xl text-white mb-1">$199</div>
-              <p className="text-soft-silver/50 text-sm mb-6">one-time payment</p>
-              <ul className="flex flex-col gap-2 mb-8 flex-1">
-                {LIFETIME_FEATURES.map((f) => (
-                  <li key={f} className="flex gap-2 text-sm text-soft-silver/70">
-                    <span className="text-celestial-gold/60">·</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <button className="btn-outline-gold py-3 rounded-lg opacity-70 cursor-not-allowed" disabled>
-                Coming Soon
-              </button>
-            </motion.div>
+                <ul className="flex-1 space-y-3 mb-8">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <span className="text-celestial-gold mt-0.5 flex-shrink-0">✦</span>
+                      <span className="text-soft-silver/70 text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => handleCheckout(plan)}
+                  disabled={loading === plan.id}
+                  className={`w-full py-3 rounded-lg font-medium transition-all disabled:opacity-50 ${
+                    plan.highlighted ? 'btn-gold' : 'btn-outline-gold'
+                  }`}
+                >
+                  {loading === plan.id ? 'Loading...' : plan.cta}
+                </button>
+              </motion.div>
+            ))}
           </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-center text-soft-silver/30 text-sm mt-10"
+          >
+            Cancel anytime. No hidden fees. Your data always remains yours.
+          </motion.p>
         </main>
       </div>
     </div>

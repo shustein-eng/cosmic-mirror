@@ -1,8 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
-import { CONVERGENCE_SYSTEM_PROMPT } from '@/lib/claude/prompts'
+import {
+  CONVERGENCE_SYSTEM_PROMPT,
+  CAREER_REPORT_PROMPT,
+  RELATIONSHIPS_REPORT_PROMPT,
+  GROWTH_REPORT_PROMPT,
+  CREATIVE_REPORT_PROMPT,
+  WELLNESS_REPORT_PROMPT,
+  LEADERSHIP_REPORT_PROMPT,
+} from '@/lib/claude/prompts'
 import { LENS_CARDS } from '@/types'
+
+const REPORT_PROMPTS: Record<string, string> = {
+  full_cosmic: CONVERGENCE_SYSTEM_PROMPT,
+  career: CAREER_REPORT_PROMPT,
+  relationships: RELATIONSHIPS_REPORT_PROMPT,
+  growth: GROWTH_REPORT_PROMPT,
+  creative: CREATIVE_REPORT_PROMPT,
+  wellness: WELLNESS_REPORT_PROMPT,
+  leadership: LEADERSHIP_REPORT_PROMPT,
+}
+
+const PREMIUM_REPORTS = ['career', 'relationships', 'growth', 'creative', 'wellness', 'leadership']
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +41,18 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (!profile) return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+
+    // Premium gating for specialized reports
+    if (PREMIUM_REPORTS.includes(report_type)) {
+      const { data: userProfile } = await supabase
+        .from('profiles')
+        .select('subscription_tier')
+        .eq('id', user.id)
+        .single()
+      if (!userProfile || userProfile.subscription_tier === 'free') {
+        return NextResponse.json({ error: 'Premium subscription required for this report type', upgrade_required: true }, { status: 403 })
+      }
+    }
 
     // Fetch all analyzed lens inputs
     const { data: lensInputs } = await supabase
@@ -70,11 +102,12 @@ export async function POST(req: NextRequest) {
     })
 
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    const systemPrompt = REPORT_PROMPTS[report_type] || CONVERGENCE_SYSTEM_PROMPT
 
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 8192,
-      system: CONVERGENCE_SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [
         {
           role: 'user',
