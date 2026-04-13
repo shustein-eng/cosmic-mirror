@@ -12,7 +12,18 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { priceId, plan } = await req.json()
+    const { priceId: rawPriceId, plan } = await req.json()
+
+    // Resolve price ID from plan name if not explicitly provided
+    const priceId = rawPriceId || (
+      plan === 'lifetime'
+        ? process.env.STRIPE_LIFETIME_PRICE_ID
+        : process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID
+    )
+
+    if (!priceId) {
+      return NextResponse.json({ error: 'Price ID not configured' }, { status: 503 })
+    }
 
     // Dynamically import stripe to avoid build errors when key is missing
     const Stripe = (await import('stripe')).default
