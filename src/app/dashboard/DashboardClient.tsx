@@ -50,6 +50,26 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
             </p>
           </motion.div>
 
+          {/* Premium upgrade banner for free users */}
+          {profile?.subscription_tier === 'free' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="mb-8 glass-card p-5 border-celestial-gold/30 bg-celestial-gold/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+            >
+              <div>
+                <p className="text-celestial-gold font-medium mb-1">✦ Unlock the Full Cosmos</p>
+                <p className="text-soft-silver/60 text-sm">
+                  Get all 10 lenses, 7 specialized reports, profile comparison, and shareable cards — from $9/month.
+                </p>
+              </div>
+              <Link href="/pricing" className="btn-gold text-sm px-6 py-2.5 rounded-lg whitespace-nowrap flex-shrink-0">
+                Upgrade to Premium
+              </Link>
+            </motion.div>
+          )}
+
           {isFirstTime ? (
             /* First-time experience */
             <motion.div
