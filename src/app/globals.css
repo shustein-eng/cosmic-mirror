@@ -1,26 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --midnight: #0A0E27;
+  --royal-purple: #1A0A3E;
+  --celestial-gold: #C9A84C;
+  --soft-silver: #B8C4D4;
+  --parchment: #F5F0E6;
+  --starfield-white: #FFFFFF;
+  --deep-space: #060818;
+  --nebula-blue: #1B2A6B;
+  --aurora-purple: #4A1B8C;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-midnight: var(--midnight);
+  --color-royal-purple: var(--royal-purple);
+  --color-celestial-gold: var(--celestial-gold);
+  --color-soft-silver: var(--soft-silver);
+  --color-parchment: var(--parchment);
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--midnight);
+  color: var(--soft-silver);
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Cosmic scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--midnight);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--celestial-gold);
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+/* Glassmorphism card base */
+.glass-card {
+  background: rgba(26, 10, 62, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 1rem;
+}
+
+.glass-card-dark {
+  background: rgba(6, 8, 24, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 1rem;
+}
+
+/* Gold gradient text */
+.gold-text {
+  background: linear-gradient(135deg, #C9A84C 0%, #F0D080 50%, #C9A84C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Cosmic gradient backgrounds */
+.cosmic-bg {
+  background: radial-gradient(ellipse at 20% 50%, rgba(74, 27, 140, 0.3) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(27, 42, 107, 0.4) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 80%, rgba(26, 10, 62, 0.5) 0%, transparent 60%),
+              linear-gradient(180deg, #060818 0%, #0A0E27 50%, #060818 100%);
+}
+
+/* Input styles */
+.cosmic-input {
+  background: rgba(10, 14, 39, 0.8);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 0.5rem;
+  color: var(--soft-silver);
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+}
+
+.cosmic-input:focus {
+  outline: none;
+  border-color: rgba(201, 168, 76, 0.7);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+}
+
+.cosmic-input::placeholder {
+  color: rgba(184, 196, 212, 0.4);
+}
+
+/* Button styles */
+.btn-gold {
+  background: linear-gradient(135deg, #C9A84C 0%, #F0D080 50%, #C9A84C 100%);
+  color: #0A0E27;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.btn-gold:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: var(--celestial-gold);
+  font-weight: 500;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-outline-gold:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--celestial-gold);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.2);
+}
+
+/* Serif headings */
+.font-serif {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+}
+
+/* Star twinkle animation */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 5px rgba(201, 168, 76, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(201, 168, 76, 0.6), 0 0 40px rgba(201, 168, 76, 0.2); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 3s ease-in-out infinite;
 }

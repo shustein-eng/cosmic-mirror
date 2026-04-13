@@ -1,0 +1,24 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "devCommand": "next dev --port 3005",
+  "installCommand": "npm install",
+  "regions": ["iad1"],
+  "functions": {
+    "src/app/api/report/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/analyze/gematria/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/analyze/natal_chart/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/analyze/middos_assessment/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/analyze/color_psychology/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
