@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -12,8 +12,6 @@ import { LENS_CARDS, type LensType } from '@/types'
 import { cn } from '@/lib/utils'
 
 const FREE_TIER_LIMIT = 4
-const PHASE_1_LENSES = LENS_CARDS.filter((l) => l.phase === 1)
-const ALL_AVAILABLE = LENS_CARDS // all shown, but phase 2+ locked
 
 export default function NewProfilePage() {
   const router = useRouter()
@@ -24,17 +22,28 @@ export default function NewProfilePage() {
   const [selectedLenses, setSelectedLenses] = useState<LensType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isPremium, setIsPremium] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return
+      const { data } = await supabase.from('profiles').select('subscription_tier').eq('id', user.id).single()
+      setIsPremium(data?.subscription_tier !== 'free')
+    })
+  }, [])
+
+  const lensLimit = isPremium ? LENS_CARDS.length : FREE_TIER_LIMIT
 
   const toggleLens = (type: LensType, phase: number) => {
-    if (phase > 1) return // locked for now
+    if (phase > 1 && !isPremium) return
     setSelectedLenses((prev) => {
       if (prev.includes(type)) return prev.filter((t) => t !== type)
-      if (prev.length >= FREE_TIER_LIMIT) return prev // free tier limit
+      if (prev.length >= lensLimit) return prev
       return [...prev, type]
     })
   }
 
-  const profileDepth = Math.round((selectedLenses.length / FREE_TIER_LIMIT) * 100)
+  const profileDepth = Math.round((selectedLenses.length / lensLimit) * 100)
 
   const handleCreate = async () => {
     if (selectedLenses.length < 1) {
@@ -135,7 +144,9 @@ export default function NewProfilePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div>
                     <h1 className="font-serif text-4xl text-white mb-1">Choose your lenses</h1>
-                    <p className="text-soft-silver/60 text-sm">Select up to 4 lenses (free tier)</p>
+                    <p className="text-soft-silver/60 text-sm">
+                      {isPremium ? 'All 10 lenses available — select as many as you like' : 'Select up to 4 lenses (free tier)'}
+                    </p>
                   </div>
 
                   {/* Depth meter */}
@@ -148,7 +159,7 @@ export default function NewProfilePage() {
                         transition={{ duration: 0.3 }}
                       />
                     </div>
-                    <p className="text-xs text-celestial-gold">{selectedLenses.length}/{FREE_TIER_LIMIT} selected</p>
+                    <p className="text-xs text-celestial-gold">{selectedLenses.length}/{lensLimit} selected</p>
                   </div>
                 </div>
 
@@ -161,8 +172,8 @@ export default function NewProfilePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                   {LENS_CARDS.map((lens) => {
                     const isSelected = selectedLenses.includes(lens.type)
-                    const isLocked = lens.phase > 1
-                    const isDisabled = !isSelected && selectedLenses.length >= FREE_TIER_LIMIT
+                    const isLocked = lens.phase > 1 && !isPremium
+                    const isDisabled = !isSelected && selectedLenses.length >= lensLimit
 
                     return (
                       <motion.button
@@ -180,8 +191,8 @@ export default function NewProfilePage() {
                         )}
                       >
                         {isLocked && (
-                          <div className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-white/10 text-soft-silver/40">
-                            Phase {lens.phase}
+                          <div className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-celestial-gold/10 text-celestial-gold/50 border border-celestial-gold/20">
+                            Premium
                           </div>
                         )}
                         {isSelected && (
