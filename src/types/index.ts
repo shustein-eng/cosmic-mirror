@@ -127,16 +127,7 @@ export interface LensCard {
 }
 
 export const LENS_CARDS: LensCard[] = [
-  {
-    type: 'iridology',
-    name: 'Iridology',
-    description: 'Upload a close-up photo of your iris. The unique fiber structure, color patterns, rings, and pigmentation of your eye are interpreted for personality insights.',
-    icon: '👁',
-    tier: 3,
-    tierLabel: 'Cultural Tradition',
-    phase: 2,
-    inputType: 'image',
-  },
+  // ── Phase 1 · Free tier (questionnaire / calculation — no image upload) ──
   {
     type: 'natal_chart',
     name: 'Natal Birth Chart',
@@ -170,6 +161,17 @@ export const LENS_CARDS: LensCard[] = [
     inputType: 'interactive',
   },
   {
+    type: 'enneagram',
+    name: 'Enneagram Deep Dive',
+    description: 'A 36-question forced-choice assessment reveals your core Enneagram type, wing influence, tri-type, and growth path.',
+    icon: '⬡',
+    tier: 1,
+    tierLabel: 'Scholarly Foundation',
+    phase: 1,
+    inputType: 'questionnaire',
+  },
+  // ── Phase 2 · Premium — image-based lenses ──
+  {
     type: 'palm',
     name: 'Palm Reading',
     description: 'Upload a photo of your dominant hand for a detailed chirology analysis of your heart, head, life, and fate lines.',
@@ -200,6 +202,17 @@ export const LENS_CARDS: LensCard[] = [
     inputType: 'image',
   },
   {
+    type: 'iridology',
+    name: 'Iridology',
+    description: 'Upload a close-up photo of your iris. The unique fiber structure, color patterns, rings, and pigmentation of your eye are interpreted for personality insights.',
+    icon: '👁',
+    tier: 3,
+    tierLabel: 'Cultural Tradition',
+    phase: 2,
+    inputType: 'image',
+  },
+  // ── Phase 3 · Premium — calculation-based depth lenses ──
+  {
     type: 'biorhythm',
     name: 'Biorhythm Cycles',
     description: 'Mathematical cycles from your birth date reveal your natural rhythms of physical energy, emotion, and intellectual clarity.',
@@ -218,15 +231,5 @@ export const LENS_CARDS: LensCard[] = [
     tierLabel: 'Cultural Tradition',
     phase: 3,
     inputType: 'calculation',
-  },
-  {
-    type: 'enneagram',
-    name: 'Enneagram Deep Dive',
-    description: 'A 36-question forced-choice assessment reveals your core Enneagram type, wing influence, tri-type, and growth path.',
-    icon: '⬡',
-    tier: 1,
-    tierLabel: 'Scholarly Foundation',
-    phase: 1,
-    inputType: 'questionnaire',
   },
 ]

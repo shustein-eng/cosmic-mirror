@@ -169,59 +169,119 @@ export default function NewProfilePage() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                  {LENS_CARDS.map((lens) => {
-                    const isSelected = selectedLenses.includes(lens.type)
-                    const isLocked = lens.phase > 1 && !isPremium
-                    const isDisabled = !isSelected && selectedLenses.length >= lensLimit
-
-                    return (
-                      <motion.button
-                        key={lens.type}
-                        onClick={() => toggleLens(lens.type, lens.phase)}
-                        disabled={isLocked || (isDisabled && !isSelected)}
-                        whileHover={!isLocked ? { scale: 1.01 } : {}}
-                        whileTap={!isLocked ? { scale: 0.99 } : {}}
-                        className={cn(
-                          'glass-card p-5 text-left transition-all duration-200 relative overflow-hidden',
-                          isSelected && 'border-celestial-gold/60 bg-celestial-gold/5',
-                          isLocked && 'opacity-50 cursor-not-allowed',
-                          isDisabled && !isSelected && 'opacity-40 cursor-not-allowed',
-                          !isLocked && !isDisabled && 'hover:border-celestial-gold/30 cursor-pointer'
-                        )}
-                      >
-                        {isLocked && (
-                          <div className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-celestial-gold/10 text-celestial-gold/50 border border-celestial-gold/20">
-                            Premium
+                {/* Free lenses */}
+                <div className="mb-8">
+                  <p className="text-xs text-soft-silver/40 uppercase tracking-widest mb-3">
+                    Free · Questionnaire &amp; Calculation
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {LENS_CARDS.filter((l) => l.phase === 1).map((lens) => {
+                      const isSelected = selectedLenses.includes(lens.type)
+                      const isDisabled = !isSelected && selectedLenses.length >= lensLimit
+                      return (
+                        <motion.button
+                          key={lens.type}
+                          onClick={() => toggleLens(lens.type, lens.phase)}
+                          disabled={isDisabled && !isSelected}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                          className={cn(
+                            'glass-card p-5 text-left transition-all duration-200 relative overflow-hidden',
+                            isSelected && 'border-celestial-gold/60 bg-celestial-gold/5',
+                            isDisabled && !isSelected && 'opacity-40 cursor-not-allowed',
+                            !isDisabled && 'hover:border-celestial-gold/30 cursor-pointer'
+                          )}
+                        >
+                          {isSelected && (
+                            <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-celestial-gold flex items-center justify-center">
+                              <span className="text-midnight text-xs font-bold">✓</span>
+                            </div>
+                          )}
+                          <div className="text-2xl mb-3">{lens.icon}</div>
+                          <h3 className={cn('font-serif text-lg mb-1', isSelected ? 'text-celestial-gold' : 'text-white')}>
+                            {lens.name}
+                          </h3>
+                          {lens.hebrewName && (
+                            <p className="text-xs text-celestial-gold/50 mb-2">{lens.hebrewName}</p>
+                          )}
+                          <p className="text-soft-silver/50 text-xs leading-relaxed">{lens.description}</p>
+                          <div className="mt-3">
+                            <span className={cn(
+                              'inline-block text-xs px-2 py-0.5 rounded-full border',
+                              lens.tier === 1 ? 'border-celestial-gold/30 text-celestial-gold/60' :
+                              'border-blue-400/30 text-blue-300/60'
+                            )}>
+                              {lens.tierLabel}
+                            </span>
                           </div>
-                        )}
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-celestial-gold flex items-center justify-center">
-                            <span className="text-midnight text-xs font-bold">✓</span>
-                          </div>
-                        )}
+                        </motion.button>
+                      )
+                    })}
+                  </div>
+                </div>
 
-                        <div className="text-2xl mb-3">{lens.icon}</div>
-                        <h3 className={cn('font-serif text-lg mb-1', isSelected ? 'text-celestial-gold' : 'text-white')}>
-                          {lens.name}
-                        </h3>
-                        {lens.hebrewName && (
-                          <p className="text-xs text-celestial-gold/50 mb-2">{lens.hebrewName}</p>
-                        )}
-                        <p className="text-soft-silver/50 text-xs leading-relaxed">{lens.description}</p>
-                        <div className="mt-3">
-                          <span className={cn(
-                            'inline-block text-xs px-2 py-0.5 rounded-full border',
-                            lens.tier === 1 ? 'border-celestial-gold/30 text-celestial-gold/60' :
-                            lens.tier === 2 ? 'border-blue-400/30 text-blue-300/60' :
-                            'border-purple-400/30 text-purple-300/60'
-                          )}>
-                            {lens.tierLabel}
-                          </span>
-                        </div>
-                      </motion.button>
-                    )
-                  })}
+                {/* Premium lenses */}
+                <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-3">
+                    <p className="text-xs text-soft-silver/40 uppercase tracking-widest">
+                      Premium · Image &amp; Extended Analysis
+                    </p>
+                    {!isPremium && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-celestial-gold/10 text-celestial-gold/50 border border-celestial-gold/20">
+                        Locked
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {LENS_CARDS.filter((l) => l.phase > 1).map((lens) => {
+                      const isSelected = selectedLenses.includes(lens.type)
+                      const isLocked = !isPremium
+                      return (
+                        <motion.button
+                          key={lens.type}
+                          onClick={() => toggleLens(lens.type, lens.phase)}
+                          disabled={isLocked}
+                          whileHover={!isLocked ? { scale: 1.01 } : {}}
+                          whileTap={!isLocked ? { scale: 0.99 } : {}}
+                          className={cn(
+                            'glass-card p-5 text-left transition-all duration-200 relative overflow-hidden',
+                            isSelected && 'border-celestial-gold/60 bg-celestial-gold/5',
+                            isLocked && 'opacity-50 cursor-not-allowed',
+                            !isLocked && 'hover:border-celestial-gold/30 cursor-pointer'
+                          )}
+                        >
+                          {isLocked && !isSelected && (
+                            <div className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-celestial-gold/10 text-celestial-gold/50 border border-celestial-gold/20">
+                              Premium
+                            </div>
+                          )}
+                          {isSelected && (
+                            <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-celestial-gold flex items-center justify-center">
+                              <span className="text-midnight text-xs font-bold">✓</span>
+                            </div>
+                          )}
+                          <div className="text-2xl mb-3">{lens.icon}</div>
+                          <h3 className={cn('font-serif text-lg mb-1', isSelected ? 'text-celestial-gold' : 'text-white')}>
+                            {lens.name}
+                          </h3>
+                          {lens.hebrewName && (
+                            <p className="text-xs text-celestial-gold/50 mb-2">{lens.hebrewName}</p>
+                          )}
+                          <p className="text-soft-silver/50 text-xs leading-relaxed">{lens.description}</p>
+                          <div className="mt-3">
+                            <span className={cn(
+                              'inline-block text-xs px-2 py-0.5 rounded-full border',
+                              lens.tier === 1 ? 'border-celestial-gold/30 text-celestial-gold/60' :
+                              lens.tier === 2 ? 'border-blue-400/30 text-blue-300/60' :
+                              'border-purple-400/30 text-purple-300/60'
+                            )}>
+                              {lens.tierLabel}
+                            </span>
+                          </div>
+                        </motion.button>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className="flex gap-4">
