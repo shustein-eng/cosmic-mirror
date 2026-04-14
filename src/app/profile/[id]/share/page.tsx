@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import Starfield from '@/components/stars/Starfield'
 import AppNav from '@/components/layout/AppNav'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 
 export default function SharePage() {
   const { id } = useParams<{ id: string }>()
@@ -17,9 +18,17 @@ export default function SharePage() {
   const [topStrengths, setTopStrengths] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [isPremium, setIsPremium] = useState<boolean | null>(null)
 
   useEffect(() => {
-    generateCard()
+    const supabase = createClient()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { setIsPremium(false); return }
+      const { data } = await supabase.from('profiles').select('subscription_tier').eq('id', user.id).single()
+      const premium = data?.subscription_tier !== 'free'
+      setIsPremium(premium)
+      if (premium) generateCard()
+    })
   }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const generateCard = async () => {
@@ -87,14 +96,32 @@ export default function SharePage() {
           <h1 className="font-serif text-4xl text-white mb-2">Share Your Profile</h1>
           <p className="text-soft-silver/50 mb-8">Generate a beautiful profile card to share with the world.</p>
 
-          {loading && (
+          {isPremium === false && (
+            <div className="glass-card p-8 text-center border-celestial-gold/25 bg-celestial-gold/5">
+              <div className="text-4xl mb-4">✦</div>
+              <h2 className="font-serif text-2xl text-white mb-2">Premium Feature</h2>
+              <p className="text-soft-silver/60 mb-6">Shareable profile cards are available on Premium and Lifetime plans.</p>
+              <Link href="/pricing" className="btn-gold px-8 py-3 rounded-lg">
+                Upgrade to Premium →
+              </Link>
+            </div>
+          )}
+
+          {isPremium === null && (
+            <div className="glass-card p-12 text-center">
+              <div className="text-3xl mb-4 animate-pulse">✦</div>
+              <p className="text-soft-silver/60">Loading...</p>
+            </div>
+          )}
+
+          {isPremium && loading && (
             <div className="glass-card p-12 text-center">
               <div className="text-3xl mb-4 animate-pulse">✦</div>
               <p className="text-soft-silver/60">Generating your cosmic profile card...</p>
             </div>
           )}
 
-          {error && (
+          {isPremium && error && (
             <div className="glass-card p-6 text-center border-red-500/20">
               <p className="text-red-400 mb-4">{error}</p>
               {error.includes('report') && (
@@ -105,7 +132,7 @@ export default function SharePage() {
             </div>
           )}
 
-          {cardDataUrl && !loading && (
+          {isPremium && cardDataUrl && !loading && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
               {/* Card preview */}
               <div className="glass-card p-4">

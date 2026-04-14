@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ReportClient from './ReportClient'
 
+const PREMIUM_REPORT_TYPES = ['career', 'relationships', 'growth', 'creative', 'wellness', 'leadership']
+
 export default async function ReportPage({
   params,
 }: {
@@ -13,14 +15,15 @@ export default async function ReportPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const { data: profile } = await supabase
-    .from('personality_profiles')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', user.id)
-    .single()
+  const [{ data: profile }, { data: userProfile }] = await Promise.all([
+    supabase.from('personality_profiles').select('*').eq('id', id).eq('user_id', user.id).single(),
+    supabase.from('profiles').select('subscription_tier').eq('id', user.id).single(),
+  ])
 
   if (!profile) redirect('/dashboard')
+
+  const isPremium = userProfile?.subscription_tier !== 'free'
+  if (PREMIUM_REPORT_TYPES.includes(type) && !isPremium) redirect('/pricing')
 
   const { data: report } = await supabase
     .from('reports')

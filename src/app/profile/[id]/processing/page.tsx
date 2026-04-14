@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { LENS_CARDS } from '@/types'
 
@@ -16,6 +16,8 @@ interface LensStep {
 export default function ProcessingPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const reportType = searchParams.get('type') || 'full_cosmic'
   const supabase = createClient()
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -63,14 +65,14 @@ export default function ProcessingPage() {
       const res = await fetch('/api/report/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile_id: id, report_type: 'full_cosmic' }),
+        body: JSON.stringify({ profile_id: id, report_type: reportType }),
       })
 
       setSynthStatus('done')
       await new Promise((res) => setTimeout(res, 800))
 
       if (res.ok) {
-        router.push(`/profile/${id}/report/full_cosmic`)
+        router.push(`/profile/${id}/report/${reportType}`)
       } else {
         router.push(`/profile/${id}`)
       }
@@ -209,7 +211,7 @@ export default function ProcessingPage() {
           </h1>
           <p className="text-soft-silver/60">
             {synthStatus === 'done'
-              ? 'Opening your Full Cosmic Profile report...'
+              ? 'Opening your report...'
               : synthStatus === 'processing'
               ? 'Synthesizing all lenses into your unified profile...'
               : `${doneCount} of ${steps.length} lenses analyzed`}

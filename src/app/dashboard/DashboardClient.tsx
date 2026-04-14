@@ -151,10 +151,10 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
                           </Link>
                           {hasReport && (
                             <Link
-                              href={`/profile/${pp.id}/report/full_cosmic`}
+                              href={`/profile/${pp.id}`}
                               className="btn-gold text-xs px-4 py-2 rounded-lg"
                             >
-                              View Report
+                              View Reports
                             </Link>
                           )}
                         </div>
