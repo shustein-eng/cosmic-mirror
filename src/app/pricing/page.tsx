@@ -18,7 +18,7 @@ const PLANS = [
     features: [
       'Up to 4 lenses per profile',
       'Full Cosmic Profile report',
-      'Gematria, Natal Chart, Middos & Color Psychology',
+      'Natal Chart, Middos, Color Psychology & Enneagram',
       'Save and revisit your profile anytime',
     ],
     cta: 'Get Started Free',

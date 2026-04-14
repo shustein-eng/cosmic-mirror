@@ -134,7 +134,7 @@ export const LENS_CARDS: LensCard[] = [
     icon: '👁',
     tier: 3,
     tierLabel: 'Cultural Tradition',
-    phase: 1,
+    phase: 2,
     inputType: 'image',
   },
   {
@@ -226,7 +226,7 @@ export const LENS_CARDS: LensCard[] = [
     icon: '⬡',
     tier: 1,
     tierLabel: 'Scholarly Foundation',
-    phase: 3,
+    phase: 1,
     inputType: 'questionnaire',
   },
 ]

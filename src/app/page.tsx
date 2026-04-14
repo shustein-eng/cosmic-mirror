@@ -69,7 +69,7 @@ export default function LandingPage() {
             variants={fadeUp}
             className="max-w-2xl text-soft-silver/70 text-lg sm:text-xl leading-relaxed font-light"
           >
-            Cosmic Mirror combines natal charts, iridology, and character assessment
+            Cosmic Mirror combines natal charts, Enneagram, and character assessment
             with color psychology and more — building the deepest personality
             profile you&apos;ve ever seen.
           </motion.p>
