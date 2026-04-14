@@ -591,7 +591,7 @@ Generate JSON with this structure:
   "title": "string (poetic career report title)",
   "cosmic_signature": "string (one sentence capturing this person's professional essence)",
   "sections": [
-    { "heading": "Your Natural Work Style", "content": "string (200-400 words)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
+    { "heading": "Your Natural Work Style", "content": "string (3-5 sentences, analyst-style)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Ideal Professional Environment", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Communication & Leadership", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Entrepreneurship & Independent Work", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" }
@@ -621,7 +621,7 @@ Generate JSON:
   "title": "string",
   "cosmic_signature": "string (one sentence capturing this person's relational essence)",
   "sections": [
-    { "heading": "Your Attachment & Connection Style", "content": "string (200-400 words)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
+    { "heading": "Your Attachment & Connection Style", "content": "string (3-5 sentences, analyst-style)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "How You Communicate", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Love & Partnership", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Friendship & Social World", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
@@ -651,7 +651,7 @@ Generate JSON:
   "title": "string",
   "cosmic_signature": "string (one sentence capturing this person's growth essence)",
   "sections": [
-    { "heading": "Your Current Strengths to Build From", "content": "string (200-400 words)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
+    { "heading": "Your Current Strengths to Build From", "content": "string (3-5 sentences, analyst-style)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Your Growth Edges", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Blind Spots & Self-Awareness", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Recommended Practices", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" }
@@ -678,7 +678,7 @@ Generate JSON:
   "title": "string",
   "cosmic_signature": "string (one sentence capturing this person's creative essence)",
   "sections": [
-    { "heading": "Your Creative Nature", "content": "string (200-400 words)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
+    { "heading": "Your Creative Nature", "content": "string (3-5 sentences, analyst-style)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Your Creative Process", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Ideal Creative Environment", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Creative Blocks & How to Overcome Them", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" }
@@ -700,7 +700,7 @@ Generate JSON:
   "title": "string",
   "cosmic_signature": "string (one sentence capturing this person's wellness essence)",
   "sections": [
-    { "heading": "Your Stress Response Patterns", "content": "string (200-400 words)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
+    { "heading": "Your Stress Response Patterns", "content": "string (3-5 sentences, analyst-style)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Your Energy Architecture", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "How You Recharge", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Emotional Regulation Toolkit", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" }
@@ -723,7 +723,7 @@ Generate JSON:
   "title": "string",
   "cosmic_signature": "string (one sentence capturing this person's leadership essence)",
   "sections": [
-    { "heading": "Your Leadership Archetype", "content": "string (200-400 words)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
+    { "heading": "Your Leadership Archetype", "content": "string (3-5 sentences, analyst-style)", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Decision-Making Under Pressure", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Building & Inspiring Teams", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" },
     { "heading": "Vision vs. Execution Balance", "content": "string", "convergence_score": number, "contributing_lenses": ["array"], "key_insight": "string" }
@@ -791,41 +791,40 @@ CONVERGENCE INSTRUCTIONS:
 - All three categories complement each other beautifully
 
 REPORT RULES:
-- Be extraordinarily detailed and specific — this should feel like the most insightful personality analysis the user has ever received
-- Avoid generic statements that could apply to anyone
-- Reference specific inputs: "Your [specific finding from lens] combined with [another finding] suggests..."
-- Include actionable insights, not just descriptions
-- Frame growth areas positively — as edges, not flaws
+- Write like a skilled analyst: direct, specific, evidence-based. No filler, no metaphors.
+- Every sentence must reference actual lens data — no generic statements.
+- Sections: 3-5 sentences max. Dense insight over length.
+- Strengths: name + 1 specific sentence grounded in lens evidence.
+- Growth: current pattern + one actionable direction. No lectures.
 - Never predict the future. Never make medical claims.
-- Use confident but non-deterministic language
 
 Generate the report as structured JSON:
 {
-  "title": "string (personalized, poetic report title)",
-  "cosmic_signature": "string (one powerful, specific sentence distilling this person — their essence)",
+  "title": "string (short, specific — 5 words max)",
+  "cosmic_signature": "string (one direct sentence capturing this person's core pattern)",
   "sections": [
     {
       "heading": "string",
-      "content": "string (rich, detailed paragraphs — aim for 200-400 words, organized by theme not by lens)",
+      "content": "string (3-5 sentences, analyst-style, specific to this person's lens data)",
       "convergence_score": number (0-1),
       "contributing_lenses": ["lens_type strings"],
-      "key_insight": "string (the single most important takeaway from this section)"
+      "key_insight": "string (the single sharpest takeaway — 1 sentence)"
     }
   ],
   "top_strengths": [
     {
       "name": "string",
-      "description": "string (2-3 sentences, specific)",
+      "description": "string (1 sentence, specific to lens findings)",
       "evidence_from": ["lens names"]
     }
   ],
   "growth_opportunities": [
     {
       "area": "string",
-      "current_state": "string",
-      "growth_direction": "string",
-      "practical_steps": ["string", "string", "string"]
+      "current_state": "string (1 sentence)",
+      "growth_direction": "string (1 sentence)",
+      "practical_steps": ["string", "string"]
     }
   ],
-  "closing_reflection": "string (inspiring, personalized closing paragraph — 3-4 sentences)"
+  "closing_reflection": "string (2 sentences max — specific, not generic)"
 }`

@@ -42,11 +42,22 @@ export default function ReportClient({ profile, report, reportType }: ReportClie
 
   const content = report.report_content
 
+  const handlePrint = () => window.print()
+
   return (
     <div className="relative min-h-screen cosmic-bg">
+      <style>{`
+        @media print {
+          body { background: #0A0E27 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          .no-print { display: none !important; }
+          .glass-card { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(201,168,76,0.2) !important; border-radius: 12px !important; }
+          .cosmic-bg { background: #0A0E27 !important; }
+          canvas { display: none !important; }
+        }
+      `}</style>
       <Starfield />
       <div className="relative z-10">
-        <AppNav />
+        <div className="no-print"><AppNav /></div>
 
         <main className="max-w-4xl mx-auto px-6 py-10">
           {/* Header */}
@@ -240,16 +251,22 @@ export default function ReportClient({ profile, report, reportType }: ReportClie
           )}
 
           {/* Disclaimer */}
-          <div className="text-center pb-12">
+          <div className="text-center pb-12 no-print">
             <p className="text-xs text-soft-silver/30 max-w-xl mx-auto leading-relaxed">
               This profile is a tool for self-reflection and should complement — not replace — your own
               judgment, the guidance of trusted mentors, and professional advice where applicable.
             </p>
-            <div className="flex justify-center gap-4 mt-4">
-              <Link href="/dashboard" className="text-xs text-soft-silver/40 hover:text-soft-silver/70 transition-colors">
+            <div className="flex justify-center gap-4 mt-5 flex-wrap">
+              <button
+                onClick={handlePrint}
+                className="btn-gold text-sm px-6 py-2.5 rounded-lg"
+              >
+                ↓ Download PDF
+              </button>
+              <Link href="/dashboard" className="btn-outline-gold text-sm px-5 py-2.5 rounded-lg">
                 ← Dashboard
               </Link>
-              <Link href={`/profile/${profile.id}/input`} className="text-xs text-soft-silver/40 hover:text-soft-silver/70 transition-colors">
+              <Link href={`/profile/${profile.id}/input`} className="text-xs text-soft-silver/40 hover:text-soft-silver/70 transition-colors self-center">
                 Edit Inputs
               </Link>
             </div>

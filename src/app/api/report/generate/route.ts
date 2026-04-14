@@ -68,36 +68,18 @@ export async function POST(req: NextRequest) {
     const lensesUsed = lensInputs.map((li) => li.lens_type)
 
     // Build the synthesis input — all lens analyses together
+    // Strip to essentials only — reduces tokens significantly
     const lensAnalysesSummary = lensInputs.map((li) => {
       const card = LENS_CARDS.find((c) => c.type === li.lens_type)
       const result = li.analysis_result as Record<string, unknown>
+      const traits = (result?.traits as Array<{ trait_name: string; confidence: string; category: string }>) || []
       return {
         lens: li.lens_type,
         lens_name: card?.name || li.lens_type,
-        tier: card?.tier || 2,
-        tier_label: card?.tierLabel || 'Established Practice',
         summary: result?.summary || '',
-        traits: result?.traits || [],
-        notable_features: result?.notable_features || [],
-        growth_indicators: result?.growth_indicators || [],
-        // Lens-specific enrichments
-        ...(li.lens_type === 'gematria' && {
-          key_numbers: result?.key_numbers,
-          torah_connections: result?.torah_connections,
-        }),
-        ...(li.lens_type === 'natal_chart' && {
-          planetary_insights: result?.planetary_insights,
-          key_aspects: result?.key_aspects,
-        }),
-        ...(li.lens_type === 'middos_assessment' && {
-          middos_scores: result?.scores,
-          dominant_middos: result?.dominant_middos,
-          growth_middos: result?.growth_middos,
-        }),
-        ...(li.lens_type === 'color_psychology' && {
-          dominant_themes: result?.dominant_themes,
-          suppressed_traits: result?.suppressed_traits,
-        }),
+        top_traits: traits.slice(0, 5).map((t) => `${t.trait_name} (${t.confidence}, ${t.category})`),
+        notable: (result?.notable_features as string[] || []).slice(0, 3),
+        growth: (result?.growth_indicators as string[] || []).slice(0, 2),
       }
     })
 
@@ -106,21 +88,19 @@ export async function POST(req: NextRequest) {
 
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 8192,
+      max_tokens: 3500,
       system: systemPrompt,
       messages: [
         {
           role: 'user',
-          content: `Please synthesize the following lens analyses into a Full Cosmic Profile report for "${profile.profile_name}".
+          content: `Synthesize these lens analyses into a ${report_type} report for "${profile.profile_name}".
 
-LENS ANALYSES:
-${JSON.stringify(lensAnalysesSummary, null, 2)}
+LENS DATA:
+${JSON.stringify(lensAnalysesSummary, null, 1)}
 
 REPORT TYPE: ${report_type}
 
-Cross-reference all lenses for convergence. Where multiple lenses agree on the same trait, highlight that as high confidence. Where they diverge, present it as nuanced complexity. Create a report that feels like the most insightful personality analysis this person has ever received — specific, grounded in the actual inputs, and deeply illuminating.
-
-Organize sections thematically (not by lens) — e.g., "Your Emotional Architecture", "How You Think and Communicate", "Your Relationship with Others", "Your Drive and Ambition", "Your Inner World and Spiritual Orientation".`,
+STYLE: Write like a sharp analyst — direct, specific, evidence-based. No poetic filler. No metaphors. Each section: 3-5 sentences max, dense with specific insight grounded in the lens data. Where lenses agree, say so. Where they diverge, note the nuance briefly.`,
         },
       ],
     })
