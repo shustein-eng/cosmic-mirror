@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Premium subscription required for profile comparison', upgrade_required: true }, { status: 403 })
     }
 
-    const { profile_a_id, profile_b_id, comparison_type = 'compatibility' } = await req.json()
+    const { profile_a_id, profile_b_id, comparison_type = 'compatibility', invite_token } = await req.json()
 
     // Verify ownership of profile A
     const { data: profileA } = await supabase
@@ -27,7 +27,30 @@ export async function POST(req: NextRequest) {
       .single()
     if (!profileA) return NextResponse.json({ error: 'Profile A not found' }, { status: 404 })
 
-    // Profile B can belong to any user (via invite)
+    // Profile B requires a valid invite token unless B also belongs to this user
+    const { data: profileB_own } = await supabase
+      .from('personality_profiles')
+      .select('id')
+      .eq('id', profile_b_id)
+      .eq('user_id', user.id)
+      .single()
+
+    if (!profileB_own) {
+      // Verify invite token grants access to profile_b_id
+      if (!invite_token) {
+        return NextResponse.json({ error: 'An invite token is required to compare with another user\'s profile' }, { status: 403 })
+      }
+      const { data: invite } = await supabase
+        .from('comparison_invites')
+        .select('inviter_profile_id, expires_at, used_at')
+        .eq('invite_token', invite_token)
+        .eq('inviter_profile_id', profile_b_id)
+        .single()
+      if (!invite) return NextResponse.json({ error: 'Invalid invite token' }, { status: 403 })
+      if (new Date(invite.expires_at) < new Date()) return NextResponse.json({ error: 'Invite token has expired' }, { status: 403 })
+    }
+
+    // Fetch profile B data
     const { data: profileB } = await supabase
       .from('personality_profiles')
       .select('*')

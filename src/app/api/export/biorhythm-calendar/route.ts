@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     if (!date_of_birth) return NextResponse.json({ error: 'Date of birth required' }, { status: 400 })
 
     const today = new Date().toISOString().split('T')[0]
-    const data = calculateBiorhythm(date_of_birth, today)
+    const allEvents = calculateBiorhythm(date_of_birth, today)
 
     // Generate iCal format for upcoming 90 days of notable events
     const lines: string[] = [
@@ -24,9 +24,6 @@ export async function POST(req: NextRequest) {
       'X-WR-CALNAME:Cosmic Mirror Biorhythms',
       'X-WR-CALDESC:Your personal biorhythm cycle events',
     ]
-
-    // Generate events for 90 days
-    const allEvents = calculateBiorhythm(date_of_birth, today)
 
     for (const event of allEvents.upcomingEvents) {
       const dateStr = event.date.replace(/-/g, '')

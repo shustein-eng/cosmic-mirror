@@ -13,6 +13,15 @@ export async function POST(req: NextRequest) {
     const { lens_input_id, profile_id, date_of_birth, birth_hour } = await req.json()
     if (!date_of_birth) return NextResponse.json({ error: 'Date of birth required' }, { status: 400 })
 
+    // Verify profile ownership (IDOR prevention)
+    const { data: ownedProfile } = await supabase
+      .from('personality_profiles')
+      .select('id')
+      .eq('id', profile_id)
+      .eq('user_id', user.id)
+      .single()
+    if (!ownedProfile) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+
     const dob = new Date(date_of_birth)
     const birthYear = dob.getFullYear()
     const birthMonth = dob.getMonth() + 1

@@ -14,7 +14,7 @@ interface AcceptInviteClientProps {
   myProfiles: Profile[]
 }
 
-export default function AcceptInviteClient({ inviterProfileName, inviterProfileId, myProfiles }: AcceptInviteClientProps) {
+export default function AcceptInviteClient({ token, inviterProfileName, inviterProfileId, myProfiles }: AcceptInviteClientProps) {
   const router = useRouter()
   const [selectedProfile, setSelectedProfile] = useState('')
   const [comparisonType, setComparisonType] = useState('compatibility')
@@ -30,9 +30,10 @@ export default function AcceptInviteClient({ inviterProfileName, inviterProfileI
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          profile_a_id: inviterProfileId,
-          profile_b_id: selectedProfile,
+          profile_a_id: selectedProfile,
+          profile_b_id: inviterProfileId,
           comparison_type: comparisonType,
+          invite_token: token,
         }),
       })
       const data = await res.json()

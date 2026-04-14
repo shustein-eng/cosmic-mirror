@@ -45,6 +45,21 @@ export async function POST(req: NextRequest) {
 
     const { lens_input_id, answers } = await req.json()
 
+    // Verify ownership (IDOR prevention)
+    const { data: lensInput } = await supabase
+      .from('lens_inputs')
+      .select('profile_id')
+      .eq('id', lens_input_id)
+      .single()
+    if (!lensInput) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    const { data: ownedProfile } = await supabase
+      .from('personality_profiles')
+      .select('id')
+      .eq('id', lensInput.profile_id)
+      .eq('user_id', user.id)
+      .single()
+    if (!ownedProfile) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+
     // Score the middos
     const middosScores = scoreMiddos(answers)
     const sortedScores = [...middosScores].sort((a, b) => b.score - a.score)

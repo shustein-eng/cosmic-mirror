@@ -15,6 +15,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Image path and bucket are required' }, { status: 400 })
     }
 
+    // Verify profile ownership (IDOR prevention)
+    const { data: ownedProfile } = await supabase
+      .from('personality_profiles')
+      .select('id')
+      .eq('id', profile_id)
+      .eq('user_id', user.id)
+      .single()
+    if (!ownedProfile) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+
     const { data: signedUrlData, error: signedUrlError } = await supabase.storage
       .from(image_bucket)
       .createSignedUrl(image_path, 300)

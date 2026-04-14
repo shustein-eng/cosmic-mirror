@@ -30,7 +30,10 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { profile_id, report_type = 'full_cosmic' } = await req.json()
+    const { profile_id, report_type: rawReportType = 'full_cosmic' } = await req.json()
+
+    const VALID_REPORT_TYPES = ['full_cosmic', 'career', 'relationships', 'growth', 'creative', 'wellness', 'leadership']
+    const report_type = VALID_REPORT_TYPES.includes(rawReportType) ? rawReportType : 'full_cosmic'
 
     // Verify profile ownership
     const { data: profile } = await supabase
