@@ -25,14 +25,13 @@ export default function AppNav({ userName }: AppNavProps) {
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/profile/new', label: 'New Profile' },
     { href: '/compare', label: 'Compare' },
-    { href: '/pricing', label: 'Premium' },
     { href: '/about', label: 'About' },
   ]
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/5 bg-midnight/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/dashboard" className="font-serif text-xl gold-text">
+        <Link href="/dashboard" className="font-serif text-xl gold-text shrink-0">
           Cosmic Mirror
         </Link>
 
@@ -51,6 +50,17 @@ export default function AppNav({ userName }: AppNavProps) {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/pricing"
+            className={cn(
+              'ml-2 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap border transition-all',
+              pathname === '/pricing'
+                ? 'bg-celestial-gold text-midnight border-celestial-gold'
+                : 'border-celestial-gold/50 text-celestial-gold hover:bg-celestial-gold/10'
+            )}
+          >
+            ✦ Premium
+          </Link>
         </div>
 
         <div className="flex items-center gap-3">

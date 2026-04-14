@@ -87,18 +87,13 @@ export default async function ProfileOverviewPage({ params }: { params: Promise<
           {completedLenses.length > 0 && (
             <div>
               <h2 className="font-serif text-2xl text-white mb-4">Reports</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {REPORT_TYPES.map((rt) => {
-                  const isGenerated = generatedReportTypes.has(rt.type)
-                  const isLocked = rt.premium && !isPremium
 
+              {/* Free report */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {REPORT_TYPES.filter((rt) => !rt.premium).map((rt) => {
+                  const isGenerated = generatedReportTypes.has(rt.type)
                   return (
-                    <div key={rt.type} className={`glass-card p-5 relative ${isGenerated ? 'border-celestial-gold/30' : ''} ${isLocked ? 'opacity-60' : ''}`}>
-                      {isLocked && (
-                        <div className="absolute top-3 right-3">
-                          <span className="text-celestial-gold/60 text-xs border border-celestial-gold/30 rounded-full px-2 py-0.5">Premium</span>
-                        </div>
-                      )}
+                    <div key={rt.type} className={`glass-card p-5 ${isGenerated ? 'border-celestial-gold/30' : ''}`}>
                       <div className="flex items-start gap-3 mb-3">
                         <span className="text-xl">{rt.icon}</span>
                         <div>
@@ -106,11 +101,7 @@ export default async function ProfileOverviewPage({ params }: { params: Promise<
                           <p className="text-soft-silver/50 text-xs mt-0.5">{rt.description}</p>
                         </div>
                       </div>
-                      {isLocked ? (
-                        <Link href="/pricing" className="btn-outline-gold text-xs px-3 py-1.5 rounded-lg block text-center">
-                          Upgrade to Unlock →
-                        </Link>
-                      ) : isGenerated ? (
+                      {isGenerated ? (
                         <Link href={`/profile/${id}/report/${rt.type}`} className="btn-gold text-xs px-3 py-1.5 rounded-lg block text-center">
                           View Report →
                         </Link>
@@ -123,6 +114,59 @@ export default async function ProfileOverviewPage({ params }: { params: Promise<
                   )
                 })}
               </div>
+
+              {/* Premium reports */}
+              {!isPremium ? (
+                <div className="glass-card p-6 border-celestial-gold/25 bg-celestial-gold/5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-6">
+                    <div>
+                      <p className="text-celestial-gold text-xs font-medium uppercase tracking-wider mb-1">Premium Reports</p>
+                      <h3 className="font-serif text-white text-xl mb-1">6 deeper dimensions await</h3>
+                      <p className="text-soft-silver/50 text-sm">Career, relationships, growth, creativity, wellness, and leadership — each tailored to your unique profile.</p>
+                    </div>
+                    <Link href="/pricing" className="btn-gold text-sm px-7 py-3 rounded-lg whitespace-nowrap shrink-0">
+                      Unlock All Reports →
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {REPORT_TYPES.filter((rt) => rt.premium).map((rt) => (
+                      <div key={rt.type} className="flex items-start gap-2 opacity-50">
+                        <span className="text-base mt-0.5">{rt.icon}</span>
+                        <div>
+                          <p className="text-white text-xs font-medium">{rt.name}</p>
+                          <p className="text-soft-silver/40 text-[10px] mt-0.5 leading-tight">{rt.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {REPORT_TYPES.filter((rt) => rt.premium).map((rt) => {
+                    const isGenerated = generatedReportTypes.has(rt.type)
+                    return (
+                      <div key={rt.type} className={`glass-card p-5 ${isGenerated ? 'border-celestial-gold/30' : ''}`}>
+                        <div className="flex items-start gap-3 mb-3">
+                          <span className="text-xl">{rt.icon}</span>
+                          <div>
+                            <h3 className="font-serif text-white text-base">{rt.name}</h3>
+                            <p className="text-soft-silver/50 text-xs mt-0.5">{rt.description}</p>
+                          </div>
+                        </div>
+                        {isGenerated ? (
+                          <Link href={`/profile/${id}/report/${rt.type}`} className="btn-gold text-xs px-3 py-1.5 rounded-lg block text-center">
+                            View Report →
+                          </Link>
+                        ) : (
+                          <Link href={`/profile/${id}/processing?type=${rt.type}`} className="btn-outline-gold text-xs px-3 py-1.5 rounded-lg block text-center">
+                            Generate →
+                          </Link>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           )}
 

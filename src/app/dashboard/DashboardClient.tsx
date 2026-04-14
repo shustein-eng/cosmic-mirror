@@ -50,26 +50,6 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
             </p>
           </motion.div>
 
-          {/* Premium upgrade banner for free users */}
-          {profile?.subscription_tier === 'free' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="mb-8 glass-card p-5 border-celestial-gold/30 bg-celestial-gold/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-            >
-              <div>
-                <p className="text-celestial-gold font-medium mb-1">✦ Unlock the Full Cosmos</p>
-                <p className="text-soft-silver/60 text-sm">
-                  Get all 10 lenses, 7 specialized reports, profile comparison, and shareable cards — from $9/month.
-                </p>
-              </div>
-              <Link href="/pricing" className="btn-gold text-sm px-6 py-2.5 rounded-lg whitespace-nowrap flex-shrink-0">
-                Upgrade to Premium
-              </Link>
-            </motion.div>
-          )}
-
           {isFirstTime ? (
             /* First-time experience */
             <motion.div
@@ -184,32 +164,48 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
                 </div>
               </div>
 
-              {/* Right sidebar — quick stats */}
-              <div>
-                <h2 className="font-serif text-2xl text-white mb-5">Quick Stats</h2>
-                <div className="flex flex-col gap-4">
-                  <div className="glass-card p-5">
-                    <p className="text-soft-silver/50 text-xs mb-1">Profiles Created</p>
-                    <p className="font-serif text-4xl gold-text">{personalityProfiles.length}</p>
-                  </div>
-                  <div className="glass-card p-5">
-                    <p className="text-soft-silver/50 text-xs mb-1">Total Reports</p>
-                    <p className="font-serif text-4xl gold-text">
-                      {personalityProfiles.reduce((acc, pp) => acc + pp.reports.length, 0)}
-                    </p>
-                  </div>
-                  <div className="glass-card p-5">
-                    <p className="text-soft-silver/50 text-xs mb-2">Your Tier</p>
-                    <p className="text-celestial-gold capitalize font-medium">
-                      {profile?.subscription_tier || 'free'}
-                    </p>
-                    {profile?.subscription_tier === 'free' && (
-                      <Link href="/pricing" className="text-xs text-soft-silver/40 hover:text-celestial-gold transition-colors mt-2 block">
-                        Upgrade to Premium →
-                      </Link>
-                    )}
-                  </div>
+              {/* Right sidebar */}
+              <div className="flex flex-col gap-4">
+                <div className="glass-card p-5">
+                  <p className="text-soft-silver/50 text-xs mb-1">Profiles Created</p>
+                  <p className="font-serif text-4xl gold-text">{personalityProfiles.length}</p>
                 </div>
+                <div className="glass-card p-5">
+                  <p className="text-soft-silver/50 text-xs mb-1">Total Reports</p>
+                  <p className="font-serif text-4xl gold-text">
+                    {personalityProfiles.reduce((acc, pp) => acc + pp.reports.length, 0)}
+                  </p>
+                </div>
+
+                {profile?.subscription_tier === 'free' ? (
+                  <div className="glass-card p-5 border-celestial-gold/25 bg-celestial-gold/5">
+                    <p className="text-celestial-gold text-xs font-medium uppercase tracking-wider mb-3">Your Plan</p>
+                    <p className="text-white font-serif text-lg mb-1">Free Tier</p>
+                    <p className="text-soft-silver/50 text-xs mb-4">4 lenses · 1 report type</p>
+                    <div className="space-y-2 mb-5">
+                      {[
+                        '10 lenses incl. image analysis',
+                        '7 specialized report types',
+                        'Profile comparison',
+                        'Shareable cosmic cards',
+                      ].map((feat) => (
+                        <div key={feat} className="flex items-start gap-2">
+                          <span className="text-celestial-gold/50 text-xs mt-0.5">✦</span>
+                          <span className="text-soft-silver/50 text-xs">{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <Link href="/pricing" className="btn-gold text-sm py-2.5 rounded-lg block text-center">
+                      Unlock Premium
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="glass-card p-5 border-celestial-gold/25 bg-celestial-gold/5">
+                    <p className="text-celestial-gold text-xs font-medium uppercase tracking-wider mb-2">Your Plan</p>
+                    <p className="text-white font-serif text-lg capitalize">{profile?.subscription_tier}</p>
+                    <p className="text-soft-silver/50 text-xs mt-1">All lenses & reports unlocked</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
