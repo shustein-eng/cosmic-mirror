@@ -10,10 +10,10 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { lens_input_id, profile_id, hebrew_name, english_name, date_of_birth } = await req.json()
+    const { lens_input_id, profile_id, hebrew_name, english_name } = await req.json()
 
-    if (!hebrew_name || !date_of_birth) {
-      return NextResponse.json({ error: 'Hebrew name and date of birth required' }, { status: 400 })
+    if (!hebrew_name) {
+      return NextResponse.json({ error: 'Hebrew name is required' }, { status: 400 })
     }
 
     // Verify ownership (IDOR prevention)
@@ -32,21 +32,13 @@ export async function POST(req: NextRequest) {
     if (!ownedProfile) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
 
     // Compute all gematria results server-side
-    const gematriaResults = calculateAll(
-      hebrew_name,
-      english_name || '',
-      date_of_birth
-    )
+    const gematriaResults = calculateAll(hebrew_name, english_name || '')
 
     // Save input data
     await supabase
       .from('lens_inputs')
       .update({
-        input_data: {
-          hebrew_name,
-          english_name,
-          date_of_birth,
-        },
+        input_data: { hebrew_name, english_name },
       })
       .eq('id', lens_input_id)
 

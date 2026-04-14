@@ -264,7 +264,6 @@ export function birthdayNumber(dateOfBirth: string): number {
 export interface GematriaResults {
   hebrew_name: string
   english_name: string
-  date_of_birth: string
 
   // Standard methods
   standard_hechrachi: number
@@ -300,18 +299,15 @@ export interface GematriaResults {
   // Similar gematria
   similar_gematria_matches: string[]
 
-  // Western numerology
-  life_path_number: number
+  // Western numerology (English name only)
   expression_number: number
   soul_urge_number: number
   personality_number: number
-  birthday_number: number
 }
 
 export function calculateAll(
   hebrewName: string,
-  englishName: string,
-  dateOfBirth: string
+  englishName: string
 ): GematriaResults {
   const atbashLetters = applyAtbash(hebrewName)
   const albamLetters = applyAlbam(hebrewName)
@@ -321,7 +317,6 @@ export function calculateAll(
   return {
     hebrew_name: hebrewName,
     english_name: englishName,
-    date_of_birth: dateOfBirth,
 
     standard_hechrachi: standardVal,
     standard_no_sofiot: misparHechrachi(
@@ -357,10 +352,8 @@ export function calculateAll(
 
     similar_gematria_matches: similar,
 
-    life_path_number: lifePath(dateOfBirth),
     expression_number: expressionNumber(englishName),
     soul_urge_number: soulUrgeNumber(englishName),
     personality_number: personalityNumber(englishName),
-    birthday_number: birthdayNumber(dateOfBirth),
   }
 }

@@ -14,14 +14,13 @@ export default function GematriaInput({ lensInputId, profileId, initialData, onC
   const [hebrewName, setHebrewName] = useState((initialData.hebrew_name as string) || '')
   const [fatherName, setFatherName] = useState((initialData.father_name as string) || '')
   const [englishName, setEnglishName] = useState((initialData.english_name as string) || '')
-  const [dateOfBirth, setDateOfBirth] = useState((initialData.date_of_birth as string) || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!hebrewName || !dateOfBirth) {
-      setError('Please enter at least your Hebrew name and date of birth.')
+    if (!hebrewName) {
+      setError('Please enter your Hebrew name.')
       return
     }
     setLoading(true)
@@ -36,7 +35,6 @@ export default function GematriaInput({ lensInputId, profileId, initialData, onC
           profile_id: profileId,
           hebrew_name: hebrewName + (fatherName ? ` בן ${fatherName}` : ''),
           english_name: englishName,
-          date_of_birth: dateOfBirth,
         }),
       })
 
@@ -64,9 +62,10 @@ export default function GematriaInput({ lensInputId, profileId, initialData, onC
       </div>
 
       <p className="text-soft-silver/60 text-sm mb-6 leading-relaxed">
-        Our engine calculates 15+ classical gematria methods from your Hebrew name, including
-        standard, Gadol, Katan, Siduri, Meshulash, Atbash, Albam, Milui (Arizal), and more — then
-        Claude interprets the personality significance of your most meaningful numerical patterns.
+        Our engine calculates 15+ classical gematria methods from your Hebrew name — standard,
+        Gadol, Katan, Siduri, Meshulash, Atbash, Albam, Milui (Arizal), and more — then matches
+        your values against a Chumash-sourced dictionary of significant words and concepts. Claude
+        interprets the patterns that emerge.
       </p>
 
       {error && (
@@ -123,17 +122,6 @@ export default function GematriaInput({ lensInputId, profileId, initialData, onC
           />
         </div>
 
-        <div>
-          <label className="block text-xs text-soft-silver/60 mb-1.5">Date of Birth *</label>
-          <input
-            type="date"
-            value={dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
-            className="cosmic-input"
-            required
-          />
-        </div>
-
         <motion.button
           type="submit"
           disabled={loading}
@@ -155,7 +143,7 @@ export default function GematriaInput({ lensInputId, profileId, initialData, onC
       <div className="mt-5 p-4 rounded-lg bg-white/5 border border-white/10">
         <p className="text-xs text-soft-silver/40 leading-relaxed">
           <strong className="text-soft-silver/60">Sources:</strong> Ba&apos;al HaTurim, Arizal milui traditions,
-          Sefer Yetzirah, Ramban, Rashi cipher methods, Pythagorean numerology.
+          Sefer Yetzirah, Ramban, Rashi cipher methods. Torah (Chumash) word matches only.
           All calculations are performed server-side; Claude provides interpretation only.
         </p>
       </div>

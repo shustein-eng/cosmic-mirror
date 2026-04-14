@@ -102,27 +102,108 @@ export const ENGLISH_NUMEROLOGY: Record<string, number> = {
 
 export const ENGLISH_VOWELS = new Set(['A', 'E', 'I', 'O', 'U'])
 
-// Small Torah dictionary for similar-gematria lookup
-// Key: gematria value → array of Hebrew words/phrases
+// Torah (Chumash only) gematria lookup dictionary
+// Key: gematria value → array of Hebrew words with context
+// Words drawn exclusively from the Five Books of Moses and their direct concepts
 export const TORAH_GEMATRIA_DICT: Record<number, string[]> = {
-  26: ['יהוה', 'אהבה'], // YHVH, Love
-  72: ['חסד', 'אלהים'], // Chesed, Elohim
-  86: ['אלהים'],        // Elohim
-  137: ['קבלה'],        // Kabbalah
-  148: ['נצח'],         // Netzach
-  157: ['כבוד'],        // Kavod
-  203: ['ברא'],         // Created
-  207: ['אור'],         // Or (Light)
-  248: ['אברהם'],       // Avraham
-  270: ['רע'],          // Evil
-  358: ['משיח', 'נחש'], // Mashiach, Nachash
-  365: ['השמים'],       // HaShamayim
-  400: ['תורה'],        // Torah (without vav)
-  406: ['תורה'],        // Torah (with vav)
-  430: ['נפש'],         // Nefesh
-  480: ['ישראל'],       // Israel (katan)
-  541: ['ישראל'],       // Israel
-  611: ['תורה'],        // Torah
-  903: ['ברא שית'],     // Beginning of creation
-  936: ['שלום'],        // Shalom
+  7:   ['גד'],                         // Gad (tribe)
+  13:  ['אחד', 'אהבה'],               // Echad (One), Ahavah (Love) — the famous pair
+  14:  ['יד', 'זהב'],                  // Yad (hand), Zahav (gold)
+  15:  ['יה', 'הוד'],                  // Yah (divine name), Hod (glory)
+  17:  ['טוב'],                        // Tov (good) — "ki tov" / it was good
+  18:  ['חי'],                         // Chai (life/living) — the most famous gematria
+  19:  ['חוה'],                        // Chavah (Eve)
+  21:  ['אהיה'],                       // Ehyeh (I Will Be — divine name, Shemot 3:14)
+  26:  ['יהוה', 'אהבה'],              // YHVH (divine name), Ahavah (love) — 2 × 13
+  30:  ['יהודה'],                      // Yehudah (Judah)
+  31:  ['אל'],                         // El (God)
+  32:  ['לב'],                         // Lev (heart)
+  36:  ['לאה', 'אלה'],                 // Leah, Eleh (these)
+  37:  ['הבל'],                        // Hevel (Abel)
+  45:  ['אדם'],                        // Adam
+  46:  ['לוי'],                        // Levi
+  50:  ['ים', 'כל'],                   // Yam (sea), Kol (all)
+  52:  ['כלב'],                        // Kalev (Caleb)
+  54:  ['דן'],                         // Dan (tribe)
+  56:  ['יום'],                        // Yom (day)
+  58:  ['נח'],                         // Noach (Noah)
+  65:  ['אדני', 'מכה'],               // Adonai (divine name), Makkah (plague)
+  67:  ['בינה'],                       // Binah (understanding)
+  68:  ['חיים'],                       // Chayyim (life)
+  72:  ['חסד'],                        // Chesed (loving-kindness)
+  73:  ['חכמה'],                       // Chochmah (wisdom)
+  75:  ['כהן'],                        // Kohen (priest)
+  80:  ['יסוד'],                       // Yesod (foundation)
+  86:  ['אלהים'],                      // Elohim (divine name)
+  90:  ['מים', 'מן', 'מלך'],          // Mayim (water), Man (manna), Melech (king)
+  91:  ['מלאך', 'סוכה'],              // Malach (angel), Sukkah (Vayikra 23:42)
+  95:  ['זבולן'],                      // Zevulun (tribe)
+  102: ['אמונה', 'בנים'],             // Emunah (faith), Banim (sons)
+  103: ['מנחה'],                       // Minchah (meal offering/gift)
+  110: ['עם'],                         // Am (people/nation)
+  130: ['סיני', 'עין'],               // Sinai, Ayin (eye/spring)
+  131: ['ענוה'],                       // Anavah (humility)
+  135: ['מצה'],                        // Matzah (unleavened bread)
+  141: ['מצוה'],                       // Mitzvah (commandment)
+  146: ['עולם'],                       // Olam (world/eternity)
+  148: ['נצח', 'פסח'],               // Netzach (eternity), Pesach (Passover)
+  156: ['יוסף'],                       // Yosef (Joseph)
+  160: ['קין', 'עץ'],                 // Kayin (Cain), Etz (tree)
+  162: ['בנימין'],                     // Binyamin (Benjamin)
+  170: ['ענן'],                        // Anan (cloud — pillar of cloud)
+  182: ['יעקב'],                       // Yaakov (Jacob)
+  190: ['כנען'],                       // Kna'an (Canaan)
+  199: ['צדקה'],                       // Tzedakah (righteousness/charity)
+  203: ['ברא'],                        // Bara (He created — first verb in Torah)
+  204: ['צדיק'],                       // Tzaddik (righteous person)
+  207: ['אור'],                        // Or (light — first creation)
+  208: ['יצחק', 'פינחס'],            // Yitzchak (Isaac), Pinchas
+  214: ['רוח'],                        // Ruach (spirit/wind — Bereishit 1:2)
+  216: ['גבורה', 'יראה'],            // Gevurah (strength), Yirah (awe) — same value
+  218: ['ירח'],                        // Yareach (moon)
+  227: ['ברכה'],                       // Bracha (blessing)
+  228: ['בכור'],                       // Bechor (firstborn)
+  238: ['רחל'],                        // Rachel
+  246: ['מדבר'],                       // Midbar (wilderness — the fourth book)
+  248: ['אברהם'],                      // Avraham — equals 248 limbs, 248 positive mitzvot
+  255: ['נהר'],                        // Nahar (river)
+  256: ['אהרן'],                       // Aharon (Aaron)
+  259: ['ראובן'],                      // Reuven (Reuben)
+  264: ['ירדן'],                       // Yarden (Jordan River)
+  270: ['רע'],                         // Ra (evil)
+  290: ['מרים'],                       // Miriam
+  291: ['ארץ'],                        // Eretz (land/earth)
+  298: ['רחמים'],                      // Rachamim (compassion)
+  301: ['אש'],                         // Esh (fire)
+  307: ['רבקה'],                       // Rivkah (Rebekah)
+  314: ['שדי'],                        // Shaddai (divine name — Shemot 6:3)
+  345: ['משה'],                        // Moshe (Moses)
+  352: ['קרבן'],                       // Korban (offering/sacrifice)
+  355: ['פרעה'],                       // Pharaoh
+  376: ['שלום', 'עשו'],              // Shalom (peace), Esav (Esau) — famous equivalence
+  380: ['מצרים'],                      // Mitzrayim (Egypt)
+  390: ['שמים'],                       // Shamayim (heavens)
+  395: ['נשמה', 'השמים'],            // Neshamah (soul), HaShamayim (the heavens) — same value
+  404: ['קדש'],                        // Kodesh (holiness)
+  407: ['תבה'],                        // Tevah (ark — Noah's ark, Bereishit 6:14)
+  409: ['אבות'],                       // Avot (forefathers)
+  430: ['נפש'],                        // Nefesh (soul — the lowest soul level)
+  441: ['אמת'],                        // Emet (truth)
+  446: ['מרור'],                       // Maror (bitter herbs — Shemot 12:8)
+  466: ['שמעון'],                      // Shimon (Simeon)
+  474: ['דעת'],                        // Da'at (knowledge)
+  496: ['מלכות'],                      // Malchut (kingship — Devarim 17)
+  501: ['אשר'],                        // Asher (tribe)
+  505: ['שרה'],                        // Sarah
+  541: ['ישראל'],                      // Yisrael
+  570: ['נפתלי', 'רשע'],             // Naphtali, Rasha (wicked) — same value
+  586: ['שופר'],                       // Shofar (Vayikra 25:9, Bemidbar 10:10)
+  611: ['תורה'],                       // Torah
+  612: ['ברית'],                       // Brit (covenant) — one more than Torah
+  620: ['כתר'],                        // Keter (crown)
+  702: ['שבת'],                        // Shabbat
+  713: ['תשובה'],                      // Teshuvah (repentance)
+  800: ['קשת'],                        // Keshet (rainbow — sign of covenant, Bereishit 9:13)
+  830: ['יששכר'],                      // Issachar (tribe)
+  913: ['בראשית'],                     // Bereishit (In the beginning — first word of Torah)
 }
