@@ -3,7 +3,7 @@ export type SubscriptionTier = 'free' | 'premium' | 'lifetime'
 export type LensType =
   | 'palm'
   | 'natal_chart'
-  | 'gematria'
+  | 'iridology'
   | 'handwriting'
   | 'face_reading'
   | 'color_psychology'
@@ -57,9 +57,6 @@ export interface LensAnalysisResult {
   notable_features: string[]
   growth_indicators: string[]
   methodology_note: string
-  // Gematria-specific
-  key_numbers?: KeyNumber[]
-  torah_connections?: TorahConnection[]
 }
 
 export interface Trait {
@@ -69,20 +66,6 @@ export interface Trait {
   confidence: 'high' | 'medium' | 'low'
   evidence: string
   source_tradition: string
-}
-
-export interface KeyNumber {
-  method: string
-  value: number
-  significance: string
-  personality_insight: string
-}
-
-export interface TorahConnection {
-  match_word: string
-  shared_value: number
-  method_used: string
-  interpretation: string
 }
 
 export interface Report {
@@ -145,15 +128,14 @@ export interface LensCard {
 
 export const LENS_CARDS: LensCard[] = [
   {
-    type: 'gematria',
-    name: 'Gematria & Number Insights',
-    hebrewName: 'חישוב תורני',
-    description: 'Torah-based numerical analysis reveals the hidden dimensions of your name and birthdate through 18+ classical calculation methods.',
-    icon: '✡',
-    tier: 1,
-    tierLabel: 'Scholarly Foundation',
+    type: 'iridology',
+    name: 'Iridology',
+    description: 'Upload a close-up photo of your iris. The unique fiber structure, color patterns, rings, and pigmentation of your eye are interpreted for personality insights.',
+    icon: '👁',
+    tier: 3,
+    tierLabel: 'Cultural Tradition',
     phase: 1,
-    inputType: 'calculation',
+    inputType: 'image',
   },
   {
     type: 'natal_chart',

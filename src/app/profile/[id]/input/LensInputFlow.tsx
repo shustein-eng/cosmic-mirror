@@ -7,7 +7,7 @@ import Starfield from '@/components/stars/Starfield'
 import AppNav from '@/components/layout/AppNav'
 import { LENS_CARDS } from '@/types'
 import { cn } from '@/lib/utils'
-import GematriaInput from '@/components/lenses/GematriaInput'
+import IridologyInput from '@/components/lenses/IridologyInput'
 import NatalChartInput from '@/components/lenses/NatalChartInput'
 import MiddosInput from '@/components/lenses/MiddosInput'
 import ColorPsychologyInput from '@/components/lenses/ColorPsychologyInput'
@@ -132,8 +132,8 @@ export default function LensInputFlow({ profile, lensInputs }: LensInputFlowProp
                 exit={{ opacity: 0, y: -20 }}
               >
                 {/* Phase 1 */}
-                {currentCard.type === 'gematria' && (
-                  <GematriaInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('gematria')} />
+                {currentCard.type === 'iridology' && (
+                  <IridologyInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('iridology')} />
                 )}
                 {currentCard.type === 'natal_chart' && (
                   <NatalChartInput lensInputId={currentLensInput.id} profileId={profile.id} initialData={currentLensInput.input_data} onComplete={() => handleLensComplete('natal_chart')} />

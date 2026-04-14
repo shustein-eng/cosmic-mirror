@@ -176,6 +176,26 @@ export default function PricingPage() {
           >
             Cancel anytime. No hidden fees. Your data always remains yours.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-12 glass-card p-8 max-w-xl mx-auto text-center border-celestial-gold/20"
+          >
+            <div className="text-3xl mb-3">🎁</div>
+            <h2 className="font-serif text-2xl text-white mb-2">Gift a Reading</h2>
+            <p className="text-soft-silver/50 text-sm mb-5">
+              Give someone the gift of deep self-knowledge. They receive a code to redeem on their own account — no subscription needed on their end.
+            </p>
+            <a href="/gift" className="btn-outline-gold text-sm px-8 py-3 rounded-lg inline-block">
+              Gift a Reading →
+            </a>
+            <p className="text-xs text-soft-silver/30 mt-3">
+              Already have a code?{' '}
+              <a href="/gift/redeem" className="text-celestial-gold/60 hover:text-celestial-gold underline">Redeem it here</a>
+            </p>
+          </motion.div>
         </main>
       </div>
     </div>

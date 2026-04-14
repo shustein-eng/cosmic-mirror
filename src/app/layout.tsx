@@ -4,8 +4,8 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Cosmic Mirror — Know Yourself',
   description:
-    'Discover who you truly are through the combined wisdom of gematria, natal charts, character assessment, and more. Built on the principle of Da es atzmecha — Know Yourself.',
-  keywords: ['personality', 'gematria', 'astrology', 'self-discovery', 'Jewish', 'profile'],
+    'Discover who you truly are through natal charts, iridology, character assessment, and more. Built on the principle of Da es atzmecha — Know Yourself.',
+  keywords: ['personality', 'iridology', 'astrology', 'self-discovery', 'Jewish', 'profile'],
   openGraph: {
     title: 'Cosmic Mirror',
     description: 'Multi-lens personality profiling platform',

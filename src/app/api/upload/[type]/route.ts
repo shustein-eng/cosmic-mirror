@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-const ALLOWED_TYPES = ['palm', 'handwriting', 'face_reading'] as const
+const ALLOWED_TYPES = ['palm', 'handwriting', 'face_reading', 'iridology'] as const
 const BUCKET_MAP: Record<string, string> = {
   palm: 'palm-images',
   handwriting: 'handwriting-samples',
   face_reading: 'face-images',
+  iridology: 'iris-images',
 }
 
 export async function POST(

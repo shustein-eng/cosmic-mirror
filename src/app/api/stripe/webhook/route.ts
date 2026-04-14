@@ -26,19 +26,33 @@ export async function POST(req: NextRequest) {
   const supabase = await createClient()
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as { metadata?: { user_id?: string; plan?: string }; subscription?: string }
+    const session = event.data.object as {
+      metadata?: { user_id?: string; plan?: string; type?: string; gift_code?: string }
+      subscription?: string
+      id: string
+    }
     const userId = session.metadata?.user_id
     const plan = session.metadata?.plan
-    if (!userId) return NextResponse.json({ received: true })
+    const isGift = session.metadata?.type === 'gift'
+    const giftCode = session.metadata?.gift_code
 
-    const tier = plan === 'lifetime' ? 'lifetime' : 'premium'
-    await supabase
-      .from('profiles')
-      .update({
-        subscription_tier: tier,
-        stripe_subscription_id: session.subscription || null,
-      })
-      .eq('id', userId)
+    if (isGift && giftCode) {
+      // Activate the gift code — mark it paid, ready to redeem
+      await supabase
+        .from('gift_codes')
+        .update({ status: 'active' })
+        .eq('code', giftCode)
+        .eq('stripe_session_id', session.id)
+    } else if (userId) {
+      const tier = plan === 'lifetime' ? 'lifetime' : 'premium'
+      await supabase
+        .from('profiles')
+        .update({
+          subscription_tier: tier,
+          stripe_subscription_id: session.subscription || null,
+        })
+        .eq('id', userId)
+    }
   }
 
   if (event.type === 'customer.subscription.deleted') {

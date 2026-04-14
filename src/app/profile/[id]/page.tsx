@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Starfield from '@/components/stars/Starfield'
 import AppNav from '@/components/layout/AppNav'
 import { LENS_CARDS } from '@/types'
+import ConvergenceMap from '@/components/profile/ConvergenceMap'
 
 const REPORT_TYPES = [
   { type: 'full_cosmic', name: 'Full Cosmic Profile', icon: '✦', premium: false, description: 'Complete personality portrait across all dimensions' },
@@ -32,9 +33,12 @@ export default async function ProfileOverviewPage({ params }: { params: Promise<
   const { data: lensInputs } = await supabase.from('lens_inputs').select('*').eq('profile_id', id)
   const { data: reports } = await supabase
     .from('reports')
-    .select('id, report_type, created_at')
+    .select('id, report_type, created_at, convergence_data')
     .eq('profile_id', id)
     .order('created_at', { ascending: false })
+
+  const latestReport = reports?.[0]
+  const convergenceData = latestReport?.convergence_data as { trait_convergence: Record<string, number>; high_confidence_traits: string[] } | null
 
   const completedLenses = lensInputs?.filter((li) => li.analysis_result) || []
   const isPremium = userProfile?.subscription_tier !== 'free'
@@ -170,11 +174,36 @@ export default async function ProfileOverviewPage({ params }: { params: Promise<
             </div>
           )}
 
-          {/* Share link */}
-          {completedLenses.length > 0 && isPremium && (
+          {/* Convergence Map */}
+          {convergenceData && Object.keys(convergenceData.trait_convergence || {}).length >= 3 && (
             <div className="mt-8">
-              <Link href={`/profile/${id}/share`} className="btn-outline-gold text-sm px-5 py-2.5 rounded-lg">
-                ✦ Generate Shareable Card
+              <ConvergenceMap
+                traitConvergence={convergenceData.trait_convergence}
+                highConfidenceTraits={convergenceData.high_confidence_traits || []}
+              />
+            </div>
+          )}
+
+          {/* Premium extras */}
+          {isPremium && completedLenses.length > 0 && (
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link href={`/profile/${id}/tanach-figure`} className="glass-card p-5 border border-celestial-gold/25 hover:border-celestial-gold/50 transition-colors group">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📖</span>
+                  <div>
+                    <h3 className="font-serif text-white text-base group-hover:text-celestial-gold transition-colors">Which Tanach Figure Are You?</h3>
+                    <p className="text-soft-silver/50 text-xs mt-0.5">Matched to Torah, Nevi&apos;im, or Ketuvim by your personality profile</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href={`/profile/${id}/share`} className="glass-card p-5 border border-white/10 hover:border-celestial-gold/30 transition-colors group">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">✦</span>
+                  <div>
+                    <h3 className="font-serif text-white text-base group-hover:text-celestial-gold transition-colors">Shareable Cosmic Card</h3>
+                    <p className="text-soft-silver/50 text-xs mt-0.5">Generate a beautiful card with your cosmic signature</p>
+                  </div>
+                </div>
               </Link>
             </div>
           )}

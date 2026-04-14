@@ -257,11 +257,17 @@ export default function ReportClient({ profile, report, reportType }: ReportClie
               judgment, the guidance of trusted mentors, and professional advice where applicable.
             </p>
             <div className="flex justify-center gap-4 mt-5 flex-wrap">
-              <button
-                onClick={handlePrint}
+              <Link
+                href={`/profile/${profile.id}/report/${reportType}/print`}
                 className="btn-gold text-sm px-6 py-2.5 rounded-lg"
               >
-                ↓ Download PDF
+                ✦ Illuminated Print
+              </Link>
+              <button
+                onClick={handlePrint}
+                className="btn-outline-gold text-sm px-6 py-2.5 rounded-lg"
+              >
+                ↓ Quick Print
               </button>
               <Link href="/dashboard" className="btn-outline-gold text-sm px-5 py-2.5 rounded-lg">
                 ← Dashboard

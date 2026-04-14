@@ -8,11 +8,9 @@ const METHODOLOGY = [
     colorClass: 'border-celestial-gold/40',
     dotClass: 'bg-celestial-gold',
     textClass: 'text-celestial-gold',
-    lenses: ['gematria', 'natal_chart', 'enneagram'],
+    lenses: ['natal_chart', 'enneagram'],
     description: 'Systems with centuries of documented scholarly tradition and/or peer-reviewed modern research.',
     sources: [
-      "Ba'al HaTurim (Rabbi Yaakov ben Asher) — classical gematria associations",
-      'Arizal (Rabbi Yitzchak Luria) — Kabbalistic milui traditions and letter meanings',
       'Claudius Ptolemy (Tetrabiblos) — foundational Western astrology',
       'Liz Greene & Stephen Arroyo — psychological astrology frameworks',
       'Don Richard Riso & Russ Hudson — The Wisdom of the Enneagram (gold standard text)',
@@ -37,11 +35,13 @@ const METHODOLOGY = [
     colorClass: 'border-purple-400/30',
     dotClass: 'bg-purple-300',
     textClass: 'text-purple-300',
-    lenses: ['palm', 'face_reading', 'biorhythm', 'chinese_zodiac'],
+    lenses: ['palm', 'face_reading', 'iridology', 'biorhythm', 'chinese_zodiac'],
     description: 'Longstanding cultural traditions valued for their rich frameworks and metaphorical insight.',
     sources: [
       "Cheiro / Count Louis Hamon (Cheiro's Palmistry, 1897) — chirology foundation",
       'Jean Haner (The Wisdom of Your Face) — Chinese physiognomy for modern audiences',
+      'Bernard Jensen (The Science and Practice of Iridology, 1952) — foundational zone mapping',
+      'Denny Ray Johnson — Rayid Method constitutional iris typing',
       'Wilhelm Fliess & Hermann Swoboda — biorhythm mathematical theory',
       'Theodora Lau (The Handbook of Chinese Horoscopes) — Chinese zodiac personality frameworks',
     ],
@@ -93,8 +93,8 @@ export default function AboutPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
-                { label: 'Data-Driven', desc: 'Birth chart, gematria, biorhythm — precisely calculated factual inputs', icon: '◈' },
-                { label: 'Image Analysis', desc: 'Palm, handwriting, face — interpretive insights via Claude Vision AI', icon: '◉' },
+                { label: 'Data-Driven', desc: 'Birth chart, biorhythm — precisely calculated factual inputs', icon: '◈' },
+                { label: 'Image Analysis', desc: 'Palm, handwriting, face, iridology — interpretive insights via Claude Vision AI', icon: '◉' },
                 { label: 'Self-Report', desc: 'Middos, Enneagram, color — your conscious self-perception', icon: '∿' },
               ].map((cat) => (
                 <div key={cat.label} className="bg-white/5 rounded-lg p-4 border border-white/10">

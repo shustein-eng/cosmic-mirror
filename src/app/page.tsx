@@ -69,9 +69,9 @@ export default function LandingPage() {
             variants={fadeUp}
             className="max-w-2xl text-soft-silver/70 text-lg sm:text-xl leading-relaxed font-light"
           >
-            Cosmic Mirror combines the ancient wisdom of gematria and natal charts with
-            character assessment and color psychology — building the deepest personality
-            profile you've ever seen.
+            Cosmic Mirror combines natal charts, iridology, and character assessment
+            with color psychology and more — building the deepest personality
+            profile you&apos;ve ever seen.
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 mt-4">

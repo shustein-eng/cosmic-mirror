@@ -198,12 +198,50 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
                     <Link href="/pricing" className="btn-gold text-sm py-2.5 rounded-lg block text-center">
                       Unlock Premium
                     </Link>
+                    <Link href="/gift/redeem" className="text-xs text-celestial-gold/50 hover:text-celestial-gold block text-center mt-3">
+                      Have a gift code? Redeem →
+                    </Link>
                   </div>
                 ) : (
                   <div className="glass-card p-5 border-celestial-gold/25 bg-celestial-gold/5">
                     <p className="text-celestial-gold text-xs font-medium uppercase tracking-wider mb-2">Your Plan</p>
                     <p className="text-white font-serif text-lg capitalize">{profile?.subscription_tier}</p>
                     <p className="text-soft-silver/50 text-xs mt-1">All lenses & reports unlocked</p>
+                  </div>
+                )}
+
+                {/* Premium features quick links */}
+                {profile?.subscription_tier !== 'free' && (
+                  <div className="glass-card p-5">
+                    <p className="text-soft-silver/40 text-xs uppercase tracking-wider mb-3">Explore</p>
+                    <div className="space-y-2">
+                      {[
+                        { href: '/cosmic-twins', icon: '◎', label: 'Cosmic Twins' },
+                        { href: '/family-constellation', icon: '✦', label: 'Family Constellation' },
+                        { href: '/couples', icon: '◉', label: 'Couples Analysis' },
+                        { href: '/compare', icon: '◈', label: 'Compare Profiles' },
+                        { href: '/gift', icon: '🎁', label: 'Gift a Reading' },
+                      ].map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="flex items-center gap-2 text-soft-silver/60 hover:text-celestial-gold text-xs transition-colors"
+                        >
+                          <span className="text-celestial-gold/50">{item.icon}</span>
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Gift a reading promo for free users */}
+                {profile?.subscription_tier === 'free' && (
+                  <div className="glass-card p-4">
+                    <Link href="/gift" className="flex items-center gap-2 text-soft-silver/50 hover:text-celestial-gold text-xs transition-colors">
+                      <span>🎁</span>
+                      <span>Give the gift of a cosmic reading</span>
+                    </Link>
                   </div>
                 )}
               </div>
