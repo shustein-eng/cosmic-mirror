@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Starfield from '@/components/stars/Starfield'
@@ -25,6 +26,20 @@ interface DashboardClientProps {
 export default function DashboardClient({ profile, personalityProfiles }: DashboardClientProps) {
   const displayName = profile?.display_name || 'Cosmic Explorer'
   const isFirstTime = personalityProfiles.length === 0
+  const [profiles, setProfiles] = useState(personalityProfiles)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null)
+
+  const handleDelete = async (id: string) => {
+    setDeleting(id)
+    try {
+      await fetch(`/api/profile/${id}`, { method: 'DELETE' })
+      setProfiles((prev) => prev.filter((p) => p.id !== id))
+    } finally {
+      setDeleting(null)
+      setConfirmDelete(null)
+    }
+  }
 
   return (
     <div className="relative min-h-screen cosmic-bg">
@@ -82,7 +97,7 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  {personalityProfiles.map((pp, i) => {
+                  {profiles.map((pp, i) => {
                     const completedLenses = pp.lens_inputs.filter((l) => l.analysis_result).length
                     const totalLenses = pp.lens_inputs.length
                     const hasReport = pp.reports.length > 0
@@ -109,14 +124,39 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
                               Created {formatDate(pp.created_at)}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <p className="text-soft-silver/60 text-xs mb-1">
+                          <div className="text-right flex flex-col items-end gap-1">
+                            <p className="text-soft-silver/60 text-xs">
                               {completedLenses}/{totalLenses} lenses analyzed
                             </p>
                             {hasReport && (
                               <span className="text-xs text-celestial-gold">
                                 {pp.reports.length} report{pp.reports.length !== 1 ? 's' : ''}
                               </span>
+                            )}
+                            {confirmDelete === pp.id ? (
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs text-red-400/80">Delete?</span>
+                                <button
+                                  onClick={() => handleDelete(pp.id)}
+                                  disabled={deleting === pp.id}
+                                  className="text-xs text-red-400 hover:text-red-300 font-medium disabled:opacity-50"
+                                >
+                                  {deleting === pp.id ? '...' : 'Yes'}
+                                </button>
+                                <button
+                                  onClick={() => setConfirmDelete(null)}
+                                  className="text-xs text-soft-silver/40 hover:text-soft-silver/70"
+                                >
+                                  No
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setConfirmDelete(pp.id)}
+                                className="text-xs text-soft-silver/25 hover:text-red-400/70 transition-colors mt-1"
+                              >
+                                Delete
+                              </button>
                             )}
                           </div>
                         </div>
@@ -168,12 +208,12 @@ export default function DashboardClient({ profile, personalityProfiles }: Dashbo
               <div className="flex flex-col gap-4">
                 <div className="glass-card p-5">
                   <p className="text-soft-silver/50 text-xs mb-1">Profiles Created</p>
-                  <p className="font-serif text-4xl gold-text">{personalityProfiles.length}</p>
+                  <p className="font-serif text-4xl gold-text">{profiles.length}</p>
                 </div>
                 <div className="glass-card p-5">
                   <p className="text-soft-silver/50 text-xs mb-1">Total Reports</p>
                   <p className="font-serif text-4xl gold-text">
-                    {personalityProfiles.reduce((acc, pp) => acc + pp.reports.length, 0)}
+                    {profiles.reduce((acc, pp) => acc + pp.reports.length, 0)}
                   </p>
                 </div>
 
