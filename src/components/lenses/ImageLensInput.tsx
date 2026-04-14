@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 interface ImageLensInputProps {
   lensInputId: string
   profileId: string
-  uploadType: 'palm' | 'handwriting' | 'face_reading'
+  uploadType: 'palm' | 'handwriting' | 'face_reading' | 'iridology'
   analyzeEndpoint: string
   title: string
   subtitle: string
