@@ -63,7 +63,6 @@ export default function ColorPsychologyInput({ lensInputId, profileId, initialDa
   const [dislikes, setDislikes] = useState<string[]>((initialData.dislikes as string[]) || [])
   const [scenarios, setScenarios] = useState<Record<string, string>>((initialData.scenarios as Record<string, string>) || {})
   const [rapidFire, setRapidFire] = useState<Record<number, string>>((initialData.rapid_fire as Record<number, string>) || {})
-  const [rapidIdx, setRapidIdx] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -79,11 +78,11 @@ export default function ColorPsychologyInput({ lensInputId, profileId, initialDa
     )
   }
 
+  const rapidIdx = Object.keys(rapidFire).length
+
   const handleRapidFire = (color: string) => {
+    if (rapidIdx >= RAPID_FIRE_PAIRS.length) return
     setRapidFire((prev) => ({ ...prev, [rapidIdx]: color }))
-    if (rapidIdx < RAPID_FIRE_PAIRS.length - 1) {
-      setTimeout(() => setRapidIdx((i) => i + 1), 200)
-    }
   }
 
   const handleSubmit = async () => {
